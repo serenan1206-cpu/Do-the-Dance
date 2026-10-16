@@ -204,6 +204,46 @@ footer a:hover{color:var(--fg)}
   .pl .one,.pl .pn{display:none}.pl b{font-size:7.5px}
   .board{grid-template-columns:1fr 1fr}.mini{padding:12px 10px}.mini li{grid-template-columns:1.2em 1fr;}.mini li .mv{display:none}
 }
+/* DANCE LINEAGE */
+.h-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:34px}
+.h-inner{min-width:900px}
+.h-map{position:relative;width:100%}
+.h-map svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.h-grid{stroke:rgba(242,241,247,.07);stroke-width:1;vector-effect:non-scaling-stroke}
+.h-yr{fill:var(--muted);font-family:var(--f-wide);font-size:8px;letter-spacing:.14em;text-anchor:middle}
+.h-tail{stroke-width:1;opacity:.28;vector-effect:non-scaling-stroke}
+.h-peak{stroke-width:2.5;opacity:.9;stroke-linecap:round;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px currentColor)}
+.h-link{fill:none;stroke:rgba(242,241,247,.35);stroke-width:1;stroke-dasharray:2 5;vector-effect:non-scaling-stroke}
+.hn{position:absolute;transform:translate(-50%,-50%);appearance:none;background:none;border:0;padding:0;color:var(--fg);cursor:pointer;display:flex;align-items:center;font:inherit}
+.hn .ball{width:24px;height:24px;transition:transform .2s}
+.hn:hover .ball,.hn[aria-pressed="true"] .ball{transform:scale(1.35)}
+.hn .hl{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);display:grid;gap:2px;white-space:nowrap;text-align:left;text-shadow:0 0 8px #000,0 0 3px #000}
+.hn.r .hl{left:auto;right:calc(100% + 10px);text-align:right}
+.hn b{font-family:var(--f-wide);font-weight:400;font-size:9.5px;letter-spacing:.14em}
+.hn small{font-size:10.5px;color:var(--muted)}
+.hn[aria-pressed="true"] b{text-decoration:underline;text-underline-offset:4px}
+.h-eras-wrap{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+.h-eras-wrap > p{margin:0 0 10px;font-family:var(--f-wide);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.h-lane{position:relative;height:26px;margin-bottom:6px}
+.h-lane span{position:absolute;top:0;height:100%;display:flex;align-items:center;padding:0 8px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid var(--line);border-radius:99px;background:rgba(255,255,255,.035);color:var(--fg)}
+.h-focus{margin-top:12vh;--c:#fff}
+.hf-head{display:flex;align-items:center;gap:20px;justify-content:center;text-align:left}
+.hf-head .ball{width:64px;height:64px}
+.hf-head h3{margin:0;font-family:var(--f-wide);font-weight:400;font-size:clamp(20px,3vw,32px);letter-spacing:.16em}
+.hf-head .code{margin:6px 0 0;font-family:var(--f-wide);font-size:8.5px;letter-spacing:.18em;color:var(--muted)}
+.hf-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:40px;max-width:980px;margin:36px auto 0}
+.hf-grid h4{margin:0 0 8px;font-family:var(--f-wide);font-weight:400;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--c)}
+.hf-grid p{margin:0 0 22px;font-size:14px;line-height:1.75;max-width:60ch;text-wrap:pretty}
+.hf-grid .mus{font-family:var(--f-wide);font-size:10px;letter-spacing:.08em;line-height:1.9}
+.hs{list-style:none;margin:0;padding:0}
+.hs a{display:grid;grid-template-columns:3.4em 1fr;gap:8px;padding:10px 0;border-bottom:1px solid var(--line);text-decoration:none;align-items:baseline}
+.hs a:hover .t{text-decoration:underline}
+.hs .y{font-family:var(--f-wide);font-size:9px;color:var(--muted)}
+.hs .t{font-weight:600;font-size:13.5px}
+.hs .t i{font-style:normal;color:var(--c)}
+.hs .t small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.hf-grid .star{margin-top:12px;font-size:11.5px;color:var(--muted)}
+@media (max-width:720px){.hf-grid{grid-template-columns:1fr;gap:10px}.hf-head .ball{width:44px;height:44px}}
 </style>
 </head>
 <body>
@@ -214,6 +254,7 @@ footer a:hover{color:var(--fg)}
   <div class="tabs">
     <a href="#atlas" id="t-atlas" aria-current="page" data-i="tabAtlas">Atlas</a>
     <a href="#charts" id="t-charts" data-i="tabCharts">Genre Charts</a>
+    <a href="#history" id="t-history" data-i="tabHist">Dance Lineage</a>
   </div>
   <div class="lang" role="group" aria-label="Language" id="lang">
     <button type="button" data-l="ko" aria-pressed="true">KO</button><button type="button" data-l="ja" aria-pressed="false">JA</button><button type="button" data-l="en" aria-pressed="false">EN</button><button type="button" data-l="zh" aria-pressed="false">ZH</button>
@@ -282,6 +323,21 @@ footer a:hover{color:var(--fg)}
   <div class="board" id="board"></div>
 
   <section class="focus" id="focus" aria-live="polite"></section>
+</div>
+
+<!-- ============ DANCE LINEAGE ============ -->
+<div id="v-history" hidden>
+  <header class="ch-head">
+    <h2>11 STYLES</h2>
+    <p class="tag" data-i="hTag"></p>
+    <p class="intro" data-i="hIntro" style="max-width:56ch;margin:28px auto 0;color:var(--muted);font-size:14px;text-wrap:pretty"></p>
+  </header>
+  <div class="h-scroll" id="h-scroll"><div class="h-inner">
+    <div class="h-map" id="h-map"><svg id="h-svg" aria-hidden="true"></svg><div id="h-nodes"></div></div>
+    <div class="h-eras-wrap"><p data-i="hMusic"></p><div id="h-eras"></div></div>
+  </div></div>
+  <p class="map-note" id="h-hint" data-i="hHint"></p>
+  <section class="h-focus" id="h-focus" aria-live="polite"></section>
 </div>
 
 <footer>
@@ -599,10 +655,121 @@ function renderFocus(){const D=L(),ch=CH.charts[chSel],fc=document.getElementByI
    '</tbody></table><a class="open" href="https://open.spotify.com/playlist/'+esc(ch.pid)+'" target="_blank" rel="noopener">'+esc(D.openChart)+'</a>'}
 addEventListener("resize",()=>{clearTimeout(window.__ro);window.__ro=setTimeout(layoutOrbit,120)});
 
+/* =================== DANCE LINEAGE =================== */
+const HX=[[1920,70],[1960,175],[1970,290],[1980,440],[1990,590],[2000,730],[2010,855],[2026,975]];
+function hx(y){for(let i=1;i<HX.length;i++)if(y<=HX[i][0]){const [a,pa]=HX[i-1],[b,pb]=HX[i];return pa+(y-a)/(b-a)*(pb-pa)}return HX[HX.length-1][1]}
+const HG=[
+ {id:"jazz",c:"#e8c07a",start:1920,peaks:[[1940,1979],[1995,2026]],place:"Broadway · Hollywood",
+  n:{ko:"재즈댄스",ja:"ジャズダンス",en:"Jazz",zh:"爵士舞"},
+  o:{ko:"아프리카계 미국인의 춤에서 출발해 1920년대 재즈 시대의 찰스턴·린디합으로 대중화됐어요.",ja:"アフリカ系アメリカ人のダンスを源流に、1920年代ジャズエイジのチャールストンやリンディホップで大衆化しました。",en:"Rooted in African American vernacular dance, it went mainstream with the Charleston and Lindy Hop of the 1920s Jazz Age.",zh:"源于非裔美国人的舞蹈，在1920年代爵士时代随查尔斯顿舞和林迪舞走红。"},
+  d:{ko:"1940~70년대 잭 콜이 연극적 재즈를, 밥 포시가 휜 손목·중절모·고립 동작의 스타일을 완성했어요. 90년대 이후 뮤직비디오 안무와 섞여 커머셜 재즈·재즈펑크로 이어졌어요.",ja:"1940〜70年代にジャック・コールが劇場ジャズを、ボブ・フォッシーが曲げた手首・中折れ帽・アイソレーションのスタイルを確立。90年代以降はMV振付と混ざり、コマーシャルジャズやジャズファンクへ。",en:"From the 1940s to the 70s Jack Cole shaped theatrical jazz and Bob Fosse set the bent wrists, bowler hats and isolations. From the 90s it merged with music-video choreography into commercial jazz and jazz funk.",zh:"1940至70年代，杰克·科尔确立了剧场爵士，鲍勃·福斯奠定了弯腕、圆顶礼帽与律动隔离的风格。90年代后与MV编舞融合，发展为商业爵士与Jazz Funk。"},
+  m:"Swing jazz → Broadway show tunes → pop · R&B",
+  s:[["Sing, Sing, Sing","Benny Goodman",1937],["Big Spender","Sweet Charity",1966],["All That Jazz","Chicago",1975],["Rhythm Nation","Janet Jackson",1989],["Single Ladies (Put a Ring on It)","Beyoncé",2008],["Toxic","Britney Spears",2003],["Buttons","The Pussycat Dolls",2006],["React","The Pussycat Dolls",2020]]},
+ {id:"funk",c:"#ff7a4d",start:1970,peaks:[[1970,1985]],place:"West Coast, USA",
+  n:{ko:"펑킹",ja:"ファンキング",en:"Funking",zh:"放克风格"},
+  o:{ko:"70년대 웨스트코스트에서 펑크 음악 위에 태어난 춤 전체(락킹·팝핀·부갈루·로봇 등)를 묶어 '펑크 스타일'이라고 불러요.",ja:"70年代の西海岸でファンク音楽とともに生まれたダンス(ロッキング・ポッピン・ブガルー・ロボットなど)の総称が「ファンクスタイル」です。",en:"'Funk styles' is the umbrella for the dances born on funk music on the 1970s West Coast: locking, popping, boogaloo, robot and more.",zh:"“放克风格”是70年代美国西海岸伴随放克音乐诞生的舞蹈总称，包括锁舞、机械舞、Boogaloo、机器人舞等。"},
+  d:{ko:"한국 씬에서 '펑킹'은 이 펑크 스타일 전반이나 소울트레인식 펑크 그루브 프리스타일을 가리키는 경우가 많아요. 범위는 씬마다 조금씩 달라요.",ja:"韓国のシーンで「ファンキング」は、このファンクスタイル全般やソウル・トレイン的なファンクグルーヴのフリースタイルを指すことが多く、範囲はシーンによって少し異なります。",en:"In the Korean scene 'funking' usually means this whole family, or a Soul Train-style funk-groove freestyle. Exactly what it covers varies by scene.",zh:"在韩国舞蹈圈，“Funking”多指整个放克风格，或《灵魂列车》式的放克律动自由舞，具体范围因圈子而异。"},
+  m:"P-Funk → boogie · electro funk → modern nu-funk",
+  s:[["Flash Light","Parliament",1977],["Give It to Me Baby","Rick James",1981],["Let's Groove","Earth, Wind & Fire",1981]]},
+ {id:"lock",c:"#ffd95a",start:1970,peaks:[[1970,1985]],place:"Los Angeles",
+  n:{ko:"락킹",ja:"ロッキング",en:"Locking",zh:"锁舞"},
+  o:{ko:"1970년 전후 LA에서 돈 캠벨이 춤을 배우다 동작이 '멈칫'하는 순간을 스타일로 만든 게 시작이에요.",ja:"1970年前後のLAで、ドン・キャンベルが踊りの途中で動きが「止まる」瞬間をスタイルにしたのが始まりです。",en:"Around 1970 in LA, Don Campbell turned the moments where his moves 'locked' into a style of their own.",zh:"1970年前后，唐·坎贝尔在洛杉矶把跳舞时动作“卡住”的瞬间变成了一种风格。"},
+  d:{ko:"TV 쇼 〈Soul Train〉으로 퍼졌고, 1973년 결성된 The Lockers가 포인트·리스트 롤·스쿠비두 같은 기본기와 코믹한 무대 매너를 정립했어요.",ja:"TV番組『ソウル・トレイン』で広まり、1973年結成のThe Lockersがポイント、リストロール、スクービードゥーなどの基本とコミカルな舞台マナーを確立しました。",en:"Soul Train spread it nationwide, and The Lockers (formed 1973) set the vocabulary — points, wrist rolls, the Scooby Doo — and the comic stage presence.",zh:"借电视节目《灵魂列车》传遍全美，1973年成立的The Lockers确立了Point、Wrist Roll、Scooby Doo等基本动作与诙谐的舞台风格。"},
+  m:"James Brown funk → 70s soul · disco funk",
+  s:[["Get Up (I Feel Like Being a) Sex Machine","James Brown",1970],["Jungle Boogie","Kool & the Gang",1973],["Soul Train '75","The Soul Train Gang",1975],["September","Earth, Wind & Fire",1978]]},
+ {id:"waack",c:"#ff5fd2",start:1971,peaks:[[1971,1981],[2003,2026]],place:"Los Angeles",
+  n:{ko:"왁킹",ja:"ワッキング",en:"Waacking",zh:"Waacking"},
+  o:{ko:"70년대 초 LA 게이 클럽에서 '펑킹(Punking)'이라는 이름으로 시작됐어요. 머리 위로 팔을 휘두르는 동작, 포즈, 표정 연기가 핵심이에요.",ja:"70年代初頭、LAのゲイクラブで「パンキング」という名で始まりました。頭上で腕を振る動き、ポーズ、表情の演技が核です。",en:"It began in early-1970s LA gay clubs under the name 'punking' — overhead arm whips, poses and facial drama are its core.",zh:"70年代初诞生于洛杉矶的同志俱乐部，最初叫“Punking”，核心是头顶甩臂、定格姿势与表情演绎。"},
+  d:{ko:"〈Soul Train〉 댄서 타이론 프록터 등을 통해 알려졌다가 80년대에 사라졌고, 2000년대에 브라이언 그린·프린세스 락커루 등이 되살려 한국·일본 씬에서 크게 자랐어요. 뉴욕 볼룸의 보깅과는 뿌리가 달라요.",ja:"『ソウル・トレイン』のダンサー、タイロン・プロクターらを通じて知られた後、80年代に一度消え、2000年代にブライアン・グリーンやプリンセス・ロッカルーらが復活させ、日韓のシーンで大きく育ちました。NYボールルームのヴォーギングとは別のルーツです。",en:"Made known by Soul Train dancers like Tyrone Proctor, it faded in the 80s and was revived in the 2000s by Brian Green, Princess Lockerooo and others, growing big in Japan and Korea. It is a different lineage from New York ballroom voguing.",zh:"经《灵魂列车》舞者泰隆·普罗克特等人走红，80年代一度消失，2000年代由布莱恩·格林、Princess Lockerooo等人复兴，在日韩舞蹈圈壮大。与纽约Ballroom的Voguing并非同源。"},
+  m:"Philly soul → disco → Hi-NRG",
+  s:[["Love Is the Message","MFSB",1973],["I Feel Love","Donna Summer",1977],["You Make Me Feel (Mighty Real)","Sylvester",1978],["Le Freak","Chic",1978],["Vogue","Madonna",1990]]},
+ {id:"old",c:"#a6f56a",start:1973,peaks:[[1973,1986]],place:"The Bronx, NYC",
+  n:{ko:"올드스쿨 힙합",ja:"オールドスクール",en:"Old School",zh:"老派嘻哈"},
+  o:{ko:"1973년 브롱크스에서 DJ 쿨 허크가 곡의 브레이크 구간을 늘려 틀면서 브레이킹(비보잉)이 시작됐어요. 아프리카 밤바타의 줄루 네이션이 힙합을 문화로 묶었어요.",ja:"1973年ブロンクスでDJクール・ハークが曲のブレイク部分を延ばして流したことからブレイキン(Bボーイング)が始まり、アフリカ・バンバータのズールー・ネーションがヒップホップを文化としてまとめました。",en:"In 1973 in the Bronx, DJ Kool Herc looped the breaks of records and breaking (b-boying) was born; Afrika Bambaataa's Zulu Nation bound hip hop into a culture.",zh:"1973年，DJ Kool Herc在布朗克斯延长唱片的Break段落，霹雳舞由此诞生；Afrika Bambaataa的Zulu Nation把嘻哈凝聚成一种文化。"},
+  d:{ko:"브레이킹·업락·초기 파티 댄스가 서부의 펑크 스타일과 섞이며 80년대 영화와 방송으로 퍼졌어요.",ja:"ブレイキン、アップロック、初期のパーティーダンスが西海岸のファンクスタイルと混ざり、80年代の映画や放送で広まりました。",en:"Breaking, uprock and early party dances mixed with the West Coast funk styles and spread through 80s films and TV.",zh:"霹雳舞、Uprock与早期派对舞与西海岸放克风格交融，借80年代电影和电视传播开来。"},
+  m:"Funk breakbeats → early rap → electro hip hop",
+  s:[["Apache","Incredible Bongo Band",1973],["Rapper's Delight","The Sugarhill Gang",1979],["Planet Rock","Afrika Bambaataa & The Soulsonic Force",1982],["The Message","Grandmaster Flash & The Furious Five",1982]]},
+ {id:"pop",c:"#6fe6ff",start:1976,peaks:[[1977,1988],[2008,2026]],place:"Fresno, California",
+  n:{ko:"팝핀",ja:"ポッピン",en:"Popping",zh:"机械舞"},
+  o:{ko:"70년대 중후반 프레즈노에서 부갈루 샘이 근육을 튕기는 '팝'과 '부갈루'를 만들고, 1977년 Electric Boogaloos를 결성했어요.",ja:"70年代半ば〜後半のフレズノで、ブガルー・サムが筋肉を弾く「ポップ」と「ブガルー」を生み、1977年にElectric Boogaloosを結成しました。",en:"In mid-to-late-70s Fresno, Boogaloo Sam created the muscle-snapping 'pop' and the boogaloo, forming the Electric Boogaloos in 1977.",zh:"70年代中后期，Boogaloo Sam在弗雷斯诺发明了弹动肌肉的“Pop”与“Boogaloo”，并于1977年组建Electric Boogaloos。"},
+  d:{ko:"로봇·애니메이션·웨이브·터팅이 붙었고, 마이클 잭슨의 문워크와 영화 〈Breakin'〉(1984)으로 세계에 퍼졌어요. 2000년대 이후 일렉트로닉 음악 위의 애니메이션 스타일로 다시 진화했어요.",ja:"ロボット、アニメーション、ウェーブ、タッティングが加わり、マイケル・ジャクソンのムーンウォークや映画『ブレイキン』(1984)で世界へ。2000年代以降はエレクトロニック音楽の上でアニメーションスタイルとして再進化しました。",en:"Robot, animation, waving and tutting joined in; Michael Jackson's moonwalk and the film Breakin' (1984) took it worldwide. Since the 2000s it has evolved again as animation over electronic music.",zh:"融入机器人、动画、Wave、Tutting等分支，借迈克尔·杰克逊的太空步和电影《Breakin'》(1984)风靡全球；2000年代后在电子音乐上以动画风格再度进化。"},
+  m:"Funk → electro funk (talk box, drum machine) → glitch hop · dubstep",
+  s:[["More Bounce to the Ounce","Zapp",1980],["So Ruff, So Tuff","Roger",1981],["Billie Jean","Michael Jackson",1983],["Egypt, Egypt","The Egyptian Lover",1984]]},
+ {id:"house",c:"#a991ff",start:1985,peaks:[[1986,2002],[2014,2026]],place:"Chicago · New York",
+  n:{ko:"하우스",ja:"ハウス",en:"House",zh:"浩室舞"},
+  o:{ko:"80년대 중반 시카고 웨어하우스(프랭키 너클스)와 뉴욕 파라다이스 개러지(래리 레반)의 클럽 문화에서 나왔어요.",ja:"80年代半ば、シカゴのウェアハウス(フランキー・ナックルズ)とNYのパラダイス・ガラージ(ラリー・レヴァン)のクラブ文化から生まれました。",en:"It came out of mid-80s club culture: Chicago's Warehouse (Frankie Knuckles) and New York's Paradise Garage (Larry Levan).",zh:"诞生于80年代中期的俱乐部文化：芝加哥的Warehouse(Frankie Knuckles)与纽约的Paradise Garage(Larry Levan)。"},
+  d:{ko:"뉴욕 클럽 댄서들이 풋워크·잭킹·로프팅을 조합해 춤으로 정립했고, 90년대 이후 유럽·일본으로 퍼져 지금은 배틀 장르로 자리 잡았어요.",ja:"NYのクラブダンサーがフットワーク、ジャッキング、ロフティングを組み合わせてダンスとして確立。90年代以降ヨーロッパや日本に広がり、今ではバトルジャンルとして定着しています。",en:"New York club dancers combined footwork, jacking and lofting into a dance; from the 90s it spread to Europe and Japan and is now a battle category.",zh:"纽约俱乐部舞者把Footwork、Jacking、Lofting组合成一门舞蹈；90年代后传到欧洲和日本，如今已是比赛项目。"},
+  m:"Disco → Chicago house → NY garage · deep house → modern house",
+  s:[["Move Your Body","Marshall Jefferson",1986],["Can You Feel It","Mr. Fingers",1986],["Your Love","Frankie Knuckles",1987],["Back To Life (However Do You Want Me)","Soul II Soul",1989],["Gypsy Woman (She's Homeless)","Crystal Waters",1991],["Show Me Love","Robin S",1993]]},
+ {id:"mid",c:"#d7f56a",start:1987,peaks:[[1987,1995]],place:"USA",
+  n:{ko:"미들스쿨 힙합",ja:"ミドルスクール",en:"Middle School",zh:"中派嘻哈"},
+  o:{ko:"80년대 말~90년대 초 뉴잭스윙 시대의 '파티 댄스' 황금기예요. 러닝맨·로저래빗·캐비지패치·왑·키드앤플레이 킥스텝처럼 이름 붙은 스텝이 쏟아졌어요.",ja:"80年代末〜90年代初頭、ニュージャックスウィング期の「パーティーダンス」黄金期。ランニングマン、ロジャーラビット、キャベッジパッチ、ワップ、キッド・ン・プレイのキックステップなど名前付きのステップが次々に生まれました。",en:"The late-80s to early-90s golden age of named party dances in the new jack swing era: Running Man, Roger Rabbit, Cabbage Patch, the Wop, the Kid 'n Play kick step.",zh:"80年代末至90年代初新杰克摇摆时代的“派对舞”黄金期：Running Man、Roger Rabbit、Cabbage Patch、Wop、Kid 'n Play踢步等有名字的舞步层出不穷。"},
+  d:{ko:"바운스 리듬이 정착했고, MC 해머·바비 브라운 같은 뮤지션의 무대 퍼포먼스가 안무의 교과서가 됐어요.",ja:"バウンスのリズムが定着し、MCハマーやボビー・ブラウンらのステージパフォーマンスが振付の教科書になりました。",en:"The bounce settled in, and stage performances by MC Hammer and Bobby Brown became the textbook for choreography.",zh:"Bounce律动就此定型，MC Hammer、Bobby Brown等人的舞台表演成了编舞教科书。"},
+  m:"New jack swing (swing beat + R&B + hip hop) · golden-age boom bap",
+  s:[["My Prerogative","Bobby Brown",1988],["Poison","Bell Biv DeVoe",1990],["U Can't Touch This","MC Hammer",1990],["Rump Shaker","Wreckx-n-Effect",1992],["Hip Hop Hooray","Naughty by Nature",1993],["Whatta Man","Salt-N-Pepa",1994]]},
+ {id:"new",c:"#7dffb2",start:1995,peaks:[[1995,2010]],place:"USA → worldwide",
+  n:{ko:"뉴스쿨 힙합",ja:"ニュースクール",en:"New School",zh:"新派嘻哈"},
+  o:{ko:"90년대 중반 이후 바운스가 무거워지고 그루브가 다양해졌어요. 할렘 셰이크·뱅크헤드 바운스·치킨 누들 수프 같은 지역 스텝이 생겼고, 2000년대 LA에선 크럼프도 등장했어요.",ja:"90年代半ば以降、バウンスが重くなりグルーヴが多様化。ハーレムシェイク、バンクヘッドバウンス、チキンヌードルスープなど地域のステップが生まれ、2000年代のLAではクランプも登場しました。",en:"From the mid-90s the bounce got heavier and grooves diversified — local steps like the Harlem Shake, Bankhead Bounce and Chicken Noodle Soup, and krump in 2000s LA.",zh:"90年代中期后Bounce更厚重、律动更多样，出现了Harlem Shake、Bankhead Bounce、Chicken Noodle Soup等地方舞步，2000年代洛杉矶还诞生了Krump。"},
+  d:{ko:"스텝을 조합한 프리스타일과 배틀 문화로 발전했고, 이후 걸스힙합과 코레오의 기본 어휘가 됐어요.",ja:"ステップを組み合わせたフリースタイルとバトル文化へ発展し、のちにガールズヒップホップやコレオの基本語彙になりました。",en:"It grew into step-combining freestyle and battle culture, and became the base vocabulary of girls hip hop and choreography.",zh:"发展为组合舞步的自由舞与Battle文化，后来成为女子嘻哈与编舞的基本词汇。"},
+  m:"Late-90s hip hop · R&B → Timbaland-style beats → Southern crunk · snap",
+  s:[["Woo Hah!! Got You All in Check","Busta Rhymes",1996],["Get Ur Freak On","Missy Elliott",2001],["Work It","Missy Elliott",2002],["Lean wit It, Rock wit It","Dem Franchize Boyz",2006],["Crank That (Soulja Boy)","Soulja Boy",2007]]},
+ {id:"girls",c:"#ff9ad5",start:2000,peaks:[[2005,2026]],place:"Japan · Korea",
+  n:{ko:"걸스힙합",ja:"ガールズヒップホップ",en:"Girls Hip Hop",zh:"女子嘻哈"},
+  o:{ko:"미국에서 온 공식 장르명이 아니라 일본·한국 댄스씬에서 굳어진 이름이에요. 힙합 그루브 위에 웨이브·힙 무브먼트·태도와 표정을 강조해요.",ja:"アメリカ発の正式なジャンル名ではなく、日本・韓国のダンスシーンで定着した名前です。ヒップホップのグルーヴにウェーブ、ヒップの動き、アティテュードと表情を強調します。",en:"Not an American genre name but one settled in the Japanese and Korean scenes: hip hop groove with emphasis on waves, hip movement, attitude and expression.",zh:"并非源自美国的正式名称，而是在日韩舞蹈圈定型的叫法：在嘻哈律动上强调Wave、胯部动作、态度与表情。"},
+  d:{ko:"90~2000년대 여성 아티스트의 뮤직비디오 안무(알리야·자넷 잭슨·시애라·비욘세)가 교과서가 됐고, 2010년대에는 패리스 고블의 영향으로 댄스홀 감성이 강해졌어요.",ja:"90〜2000年代の女性アーティストのMV振付(アリーヤ、ジャネット・ジャクソン、シアラ、ビヨンセ)が教科書となり、2010年代にはパリス・ゴーベルの影響でダンスホールの色が濃くなりました。",en:"Music-video choreography by women artists of the 90s–2000s (Aaliyah, Janet Jackson, Ciara, Beyoncé) was the textbook; in the 2010s Parris Goebel's influence brought in more dancehall.",zh:"90至2000年代女歌手的MV编舞(Aaliyah、珍妮·杰克逊、Ciara、碧昂丝)是教科书；2010年代受Parris Goebel影响，Dancehall味道更浓。"},
+  m:"Women's R&B · hip hop → crunk&B → trap · dancehall · afrobeats",
+  s:[["Try Again","Aaliyah",2000],["Goodies (feat. Petey Pablo)","Ciara",2004],["Get Me Bodied","Beyoncé",2007],["Level Up","Ciara",2018],["Rude Boy","Rihanna",2010],["Press","Cardi B",2019]]},
+ {id:"choreo",c:"#9fb8ff",start:2008,peaks:[[2008,2026]],place:"LA → YouTube → Seoul",
+  n:{ko:"코레오",ja:"コレオ",en:"Choreography",zh:"编舞"},
+  o:{ko:"동작 스타일이 아니라 '곡 하나를 해석해 짠 안무'라는 형식이에요. 여러 장르를 섞어 가사와 음악을 시각화해요.",ja:"動きのスタイルではなく「1曲を解釈して作る振付」という形式です。複数のジャンルを混ぜて歌詞と音楽を可視化します。",en:"A format rather than a movement style: choreography built by interpreting one song, mixing genres to visualise the lyrics and music.",zh:"不是一种动作风格，而是“诠释一首歌而编排的舞蹈”这一形式，融合多种舞风把歌词和音乐可视化。"},
+  d:{ko:"90년대 LA 밀레니엄 댄스 컴플렉스 같은 스튜디오 문화에서 자라, 2008년 MTV 〈America's Best Dance Crew〉와 유튜브 시대에 폭발했어요. 2014년 서울 원밀리언 댄스 스튜디오를 거치며 K-pop 안무 생태계와 합쳐졌어요.",ja:"90年代LAのミレニアム・ダンス・コンプレックスなどのスタジオ文化で育ち、2008年のMTV『America's Best Dance Crew』とYouTube時代に爆発。2014年ソウルの1MILLION Dance Studioを経てK-POP振付の生態系と合流しました。",en:"It grew in studio culture like LA's Millennium Dance Complex in the 90s, exploded with MTV's America's Best Dance Crew (2008) and YouTube, and merged with K-pop choreography via Seoul's 1MILLION Dance Studio (2014).",zh:"在90年代洛杉矶Millennium Dance Complex等工作室文化中成长，借2008年MTV《America's Best Dance Crew》和YouTube时代爆发，2014年经首尔1MILLION Dance Studio与K-pop编舞生态汇合。"},
+  m:"2000s–2010s slow R&B ('choreo classics') → pop → K-pop",
+  s:[["Birthday Sex","Jeremih",2009],["Body Party","Ciara",2013],["Partition","Beyoncé",2013],["7/11","Beyoncé",2014],["Gangsta","Kehlani",2016],["2 On (feat. ScHoolboy Q)","Tinashe",2014]]}
+];
+const HLINKS=[["funk","lock"],["funk","pop"],["old","mid"],["mid","new"],["new","girls"],["new","choreo"],["jazz","choreo"],["jazz","girls"],["waack","house"]];
+const HERAS=[
+ [["Swing jazz",1920,1955],["Funk",1968,1978],["Electro funk",1980,1986],["New jack swing",1987,1993],["Late-90s hip hop · R&B",1995,2003],["Slow-jam R&B",2005,2011],["Trap",2012,2026]],
+ [["Show tunes",1950,1968],["Disco",1974,1981],["Chicago house",1985,1992],["Deep house",1993,2002],["Crunk · Snap",2003,2009],["Dancehall · Afrobeats",2013,2026]],
+ [["Breakbeats",1973,1982],["Golden-age hip hop",1986,1995],["K-pop",2012,2026]]
+];
+const HUI={
+ ko:{tabHist:"댄스 계보",hTag:"스트릿 댄스 11개 장르의 뿌리와 음악",hIntro:"가로축은 시간이에요. 행성은 장르가 태어난 해, 밝은 궤도는 전성기, 점선은 영향을 주고받은 흐름이에요. 아래 띠는 그 시절 춤을 움직인 음악이에요. 행성을 누르면 자세한 이야기와 대표곡이 열려요.",hMusic:"그 시절의 음악",hO:"기원",hD:"발전",hM:"음악의 변천",hS:"대표곡",hStar:"★ Do the dance에 있는 곡",hHint:"휴대폰에서는 연대표를 좌우로 밀어서 볼 수 있어요"},
+ ja:{tabHist:"ダンス系譜",hTag:"ストリートダンス11ジャンルのルーツと音楽",hIntro:"横軸は時間です。惑星はジャンルが生まれた年、明るい軌道は全盛期、点線は影響の流れ。下の帯はその時代のダンスを動かした音楽です。惑星をタップすると詳しい話と代表曲が開きます。",hMusic:"その時代の音楽",hO:"起源",hD:"発展",hM:"音楽の変遷",hS:"代表曲",hStar:"★ Do the danceに入っている曲",hHint:"スマホでは年表を左右にスワイプして見られます"},
+ en:{tabHist:"Dance Lineage",hTag:"Roots and music of eleven street dance styles",hIntro:"Time runs left to right. Each planet marks the year a style was born, bright orbits are its peak years, and dotted arcs show influence. The bands below are the music that moved each era. Tap a planet for the story and key tracks.",hMusic:"Music of the era",hO:"Origin",hD:"How it grew",hM:"How the music changed",hS:"Key tracks",hStar:"★ also in Do the dance",hHint:"On a phone, swipe the timeline sideways"},
+ zh:{tabHist:"舞蹈谱系",hTag:"11种街舞的源流与音乐",hIntro:"横轴是时间。行星是舞种诞生的年份，明亮轨道是全盛期，虚线是相互影响的脉络。下方色带是推动各时代舞蹈的音乐。点击行星即可查看详细故事与代表曲。",hMusic:"那个年代的音乐",hO:"起源",hD:"发展",hM:"音乐的演变",hS:"代表曲",hStar:"★ 收录于 Do the dance",hHint:"在手机上可左右滑动时间轴"}
+};
+Object.keys(HUI).forEach(k=>Object.assign(I18N[k],HUI[k]));
+let hSel="lock";
+const normT=s=>String(s).toLowerCase().replace(/\s*[\(\[].*?[\)\]]/g,"").replace(/ - .*$/,"").replace(/[^a-z0-9぀-ヿ一-鿿가-힯]+/g,"");
+function inDTD(t,a){const nt=normT(t),na=a.toLowerCase().split(",")[0].trim();return songs.find(s=>normT(s.t)===nt&&s.a.toLowerCase().includes(na))}
+function renderHistory(){const D=L(),W2=1000,ROW=52,top=48,H2=top+HG.length*ROW+20;
+  const svg=document.getElementById("h-svg"),nodes=document.getElementById("h-nodes");svg.setAttribute("viewBox","0 0 "+W2+" "+H2);
+  document.getElementById("h-map").style.aspectRatio=W2+"/"+H2;
+  const Y={};HG.forEach((g,i)=>Y[g.id]=top+i*ROW+ROW/2);
+  let s="";
+  HX.forEach(([yr])=>{const x=hx(yr);s+='<line x1="'+x+'" y1="18" x2="'+x+'" y2="'+(H2-6)+'" class="h-grid"/><text x="'+x+'" y="12" class="h-yr">'+(yr===2026?"NOW":yr)+'</text>'});
+  HLINKS.forEach(([a,b])=>{const A=HG.find(g=>g.id===a),B=HG.find(g=>g.id===b);const x1=hx(A.start),y1=Y[a],x2=hx(B.start),y2=Y[b];const mx=(x1+x2)/2;
+    s+='<path class="h-link" d="M'+x1+' '+y1+' C '+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2+'"/>'});
+  HG.forEach(g=>{const y=Y[g.id];s+='<line x1="'+hx(g.start)+'" y1="'+y+'" x2="'+hx(2026)+'" y2="'+y+'" class="h-tail" stroke="'+g.c+'"/>';
+    g.peaks.forEach(([a,b])=>{s+='<line x1="'+hx(Math.max(a,g.start))+'" y1="'+y+'" x2="'+hx(b)+'" y2="'+y+'" class="h-peak" stroke="'+g.c+'"/>'})});
+  svg.innerHTML=s;
+  nodes.innerHTML=HG.map(g=>{const x=hx(g.start),right=x>720;return '<button type="button" class="hn'+(right?" r":"")+'" data-id="'+g.id+'" aria-pressed="'+(g.id===hSel)+'" style="--c:'+g.c+';left:'+(x/W2*100)+'%;top:'+(Y[g.id]/H2*100)+'%">'+
+    '<span class="ball"></span><span class="hl"><b>'+esc(g.n[lang]||g.n.en)+'</b><small>'+g.start+' · '+esc(g.place)+'</small></span></button>'}).join("");
+  nodes.querySelectorAll(".hn").forEach(b=>b.addEventListener("click",()=>{hSel=b.dataset.id;renderHistory();document.getElementById("h-focus").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})}));
+  const eras=document.getElementById("h-eras");
+  eras.innerHTML=HERAS.map(lane=>'<div class="h-lane">'+lane.map(([n,a,b])=>'<span style="left:'+(hx(a)/W2*100)+'%;width:'+((hx(b)-hx(a))/W2*100)+'%">'+esc(n)+'</span>').join("")+'</div>').join("");
+  renderHFocus()}
+function renderHFocus(){const D=L(),g=HG.find(x=>x.id===hSel),f=document.getElementById("h-focus");f.style.setProperty("--c",g.c);
+  const rows=g.s.map(([t,a,y])=>{const hit=inDTD(t,a);const url=hit?hit.url:"https://open.spotify.com/search/"+encodeURIComponent(t.replace(/\s*\(.*?\)/g,"")+" "+a);
+    return '<li><a href="'+esc(url)+'" target="_blank" rel="noopener"><span class="y">'+y+'</span><span class="t">'+esc(t)+(hit?' <i title="'+esc(D.hStar)+'">★</i>':'')+'<small>'+esc(a)+'</small></span></a></li>'}).join("");
+  f.innerHTML='<div class="hf-head"><span class="ball"></span><div><h3>'+esc((g.n[lang]||g.n.en))+'</h3><p class="code">'+esc(g.n.en.toUpperCase())+' · '+g.start+' · '+esc(g.place)+'</p></div></div>'+
+   '<div class="hf-grid"><section><h4>'+esc(D.hO)+'</h4><p>'+esc(g.o[lang]||g.o.en)+'</p><h4>'+esc(D.hD)+'</h4><p>'+esc(g.d[lang]||g.d.en)+'</p><h4>'+esc(D.hM)+'</h4><p class="mus">'+esc(g.m)+'</p></section>'+
+   '<section><h4>'+esc(D.hS)+'</h4><ol class="hs">'+rows+'</ol><p class="star">'+esc(D.hStar)+'</p></section></div>'}
+
 /* =================== ROUTING + LANGUAGE =================== */
-function route(){const v=location.hash==="#charts"?"charts":"atlas";document.getElementById("v-atlas").hidden=v!=="atlas";document.getElementById("v-charts").hidden=v!=="charts";
-  document.getElementById("t-atlas").toggleAttribute("aria-current",v==="atlas");document.getElementById("t-charts").toggleAttribute("aria-current",v==="charts");
-  if(v==="atlas"){document.getElementById("t-atlas").setAttribute("aria-current","page");requestAnimationFrame(resize)}else{document.getElementById("t-charts").setAttribute("aria-current","page");layoutOrbit()}}
+function route(){const h=location.hash,v=h==="#charts"?"charts":h==="#history"?"history":"atlas";
+  ["atlas","charts","history"].forEach(k=>{document.getElementById("v-"+k).hidden=v!==k;const t=document.getElementById("t-"+k);if(v===k)t.setAttribute("aria-current","page");else t.removeAttribute("aria-current")});
+  if(v==="atlas")requestAnimationFrame(resize);else if(v==="charts")layoutOrbit();else{renderHistory();const hs=document.getElementById("h-scroll");document.getElementById("h-hint").hidden=hs.scrollWidth<=hs.clientWidth}}
 addEventListener("hashchange",()=>{route();scrollTo(0,0)});
 function applyLang(l){lang=l;const D=L();document.documentElement.lang=l;
   document.querySelectorAll("[data-i]").forEach(el=>{if(el.closest(".pl,.mini"))return;if(D[el.dataset.i]!=null)el.textContent=D[el.dataset.i]});
@@ -611,7 +778,7 @@ function applyLang(l){lang=l;const D=L();document.documentElement.lang=l;
   mWrap.querySelectorAll(".chip").forEach(b=>{b.title=D.mood[b.dataset.m]||""});
   songs.forEach(s=>s.el.setAttribute("aria-label",s.t+" — "+s.a+" ("+D.openIn+")"));
   document.querySelectorAll("#lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.l===l));
-  if(CH)renderCharts();renderLive();
+  if(CH)renderCharts();renderLive();if(!document.getElementById("v-history").hidden)renderHistory();
   try{localStorage.setItem("dtd-lang",l)}catch(e){}}
 document.querySelectorAll("#lang button").forEach(b=>b.addEventListener("click",()=>applyLang(b.dataset.l)));
 applyLang(lang);route();
