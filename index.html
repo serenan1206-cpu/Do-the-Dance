@@ -1,196 +1,323 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Do the Dance Atlas</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Do the Dance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&display=swap">
 <style>
-/* Layout: festival-poster hero → one big dotted "world map" where genres are continents
-   and every song is a city placed by mood (west = dark/sultry, east = bright/sweet) and energy (north = peak hype). */
+/* Deep-space edition. Reference: AOZ — black starfield, one thin orbit line snaking through glowing planets,
+   wide-set techno capitals for names and catalogue codes, everything else quiet. */
 :root{
-  --bg:#0c0a12; --bg-2:#15121e; --fg:#f3eff9; --muted:#8d87a3; --line:#2b2638;
-  --hyp:#ff4fd8; --kj:#76f2ff; --pop:#ffe04a; --rnb:#ff7d45; --rap:#b4ff5a; --groove:#b79bff;
-  --f-display:"Figtree","IBM Plex Sans KR",system-ui,sans-serif;
+  --space:#000; --fg:#f2f1f7; --muted:#8e8ba3; --faint:#4a4760; --line:rgba(242,241,247,.16); --orbit:rgba(242,241,247,.55);
+  --hyp:#ff5fd2; --kj:#6fe6ff; --pop:#ffd95a; --rnb:#ff7a4d; --rap:#a6f56a; --groove:#a991ff;
+  --up:#7dffb2; --down:#ff6b8a;
+  --f-wide:"Michroma","IBM Plex Sans KR",system-ui,sans-serif;
   --f-body:"Figtree","IBM Plex Sans KR",system-ui,sans-serif;
-  --f-kr:"IBM Plex Sans KR","Figtree",system-ui,sans-serif;
   --f-ja:"Noto Sans JP","Figtree",system-ui,sans-serif;
   --f-zh:"Noto Sans SC","Figtree",system-ui,sans-serif;
-  --f-mono:"Figtree","IBM Plex Sans KR",system-ui,sans-serif;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
+html{background:var(--space)}
+body{margin:0;background:var(--space);color:var(--fg);font:15px/1.5 var(--f-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+:lang(ja) body{font-family:var(--f-ja)} :lang(zh) body{font-family:var(--f-zh)}
 a{color:inherit}
-.wrap{max-width:1280px;margin:0 auto;padding-block:28px 64px;display:grid;gap:28px}
+[hidden]{display:none!important}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.page{position:relative;z-index:1}
+.wide{font-family:var(--f-wide);text-transform:uppercase;letter-spacing:.14em;font-weight:400}
+:focus-visible{outline:1.5px solid var(--fg);outline-offset:3px}
+
+/* NAV — AOZ top bar */
+nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:28px;padding:14px max(20px,env(safe-area-inset-left)) 14px max(20px,env(safe-area-inset-right));
+  background:linear-gradient(#000 60%,rgba(0,0,0,0))}
+.logo{font-family:var(--f-wide);font-size:15px;letter-spacing:.32em;text-decoration:none;white-space:nowrap}
+.tabs{display:flex;gap:22px}
+.tabs a{font-family:var(--f-wide);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:6px 0;border-bottom:1px solid transparent}
+.tabs a[aria-current="page"]{color:var(--fg);border-color:var(--fg)}
+.tabs a:hover{color:var(--fg)}
+.lang{margin-left:auto;display:flex;gap:12px}
+.lang button{appearance:none;background:none;border:0;padding:6px 0;color:var(--muted);font-family:var(--f-wide);font-size:9.5px;letter-spacing:.16em;cursor:pointer}
+.lang button[aria-pressed="true"]{color:var(--fg)}
+
+.wrap{max-width:1240px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left)) 0 max(16px,env(safe-area-inset-right))}
 
 /* HERO */
-.hero{display:grid;gap:20px;position:relative}
-.topline{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:10px}
-.topline b{color:var(--fg);font-weight:500}
-h1{margin:0;font-family:var(--f-display);font-weight:800;line-height:.92;letter-spacing:-.05em;
-  font-size:clamp(60px,12.5vw,184px);display:flex;flex-wrap:wrap;align-items:flex-end;gap:0 .2em}
-h1 .out{color:transparent;-webkit-text-stroke:2px var(--fg)}
-.tag{margin:10px 0 0;font-family:var(--f-body);font-weight:600;font-size:clamp(11px,1.3vw,15px);letter-spacing:.08em;text-transform:uppercase;line-height:1.4;color:var(--muted);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-:lang(ja) .sub p,:lang(ja) .map-note,:lang(ja) .idx-head p{font-family:var(--f-ja)}
-:lang(zh) .sub p,:lang(zh) .map-note,:lang(zh) .idx-head p{font-family:var(--f-zh)}
-:lang(ja) .tag{font-family:var(--f-ja)}
-:lang(zh) .tag{font-family:var(--f-zh)}
-.lang{display:inline-flex;gap:2px;border:1px solid var(--line);border-radius:99px;padding:2px}
-.lang button{appearance:none;border:0;background:transparent;color:var(--muted);font:500 11px/1 var(--f-mono);letter-spacing:.08em;padding:6px 9px;border-radius:99px;cursor:pointer}
-.lang button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
-.lang button:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
-.topline{align-items:center}
-.sub{display:flex;flex-wrap:wrap;gap:28px 40px;margin-top:8px;align-items:flex-end;justify-content:space-between}
-.sub p{margin:0;font-family:var(--f-kr);max-width:52ch;color:var(--fg);font-size:15px;text-wrap:pretty}
-.stats{display:flex;gap:28px;font-variant-numeric:tabular-nums}
-.stat{display:grid}
-.stat span{font-family:var(--f-display);font-weight:800;font-size:40px;line-height:1;letter-spacing:-.03em}
-.stat small{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.hero{text-align:center;padding:12vh 0 7vh}
+.hero h1{margin:0;font-family:var(--f-wide);font-weight:400;font-size:clamp(30px,6.4vw,78px);letter-spacing:.34em;line-height:1.15;margin-right:-.34em}
+.hero .tag{margin:18px 0 0;font-family:var(--f-wide);font-size:clamp(8.5px,1vw,11px);letter-spacing:.24em;text-transform:uppercase;color:var(--fg);opacity:.85}
+.hero .intro{max-width:46ch;margin:34px auto 0;color:var(--muted);font-size:14px;text-wrap:pretty}
+.stats{display:flex;justify-content:center;gap:clamp(28px,6vw,72px);margin-top:36px}
+.stat{display:grid;gap:6px}
+.stat b{font-family:var(--f-wide);font-weight:400;font-size:clamp(20px,2.6vw,30px);letter-spacing:.06em}
+.stat small{font-family:var(--f-wide);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
 
-/* CONTROLS */
-.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line)}
-.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.group-label{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-right:4px}
-.chip{appearance:none;border:1px solid var(--line);background:transparent;color:var(--fg);font:500 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:8px 11px;border-radius:99px;cursor:pointer;display:inline-flex;gap:7px;align-items:center;transition:background .15s,border-color .15s,opacity .15s}
+/* ATLAS CONTROLS */
+.controls{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:center;justify-content:center;padding:14px 0 18px}
+.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center}
+.chip,.seg button{appearance:none;background:transparent;border:1px solid var(--line);color:var(--fg);font-family:var(--f-wide);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:9px 12px;border-radius:99px;cursor:pointer;display:inline-flex;gap:8px;align-items:center;transition:opacity .15s,border-color .15s,background .15s}
 .chip:hover{border-color:var(--muted)}
-.chip:focus-visible,.pin:focus-visible,.seg button:focus-visible,.idx a:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
-.chip i{width:9px;height:9px;border-radius:50%;background:var(--c,var(--fg))}
-.chip[aria-pressed="false"]{opacity:.38}
-.chip.mood[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-.seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:3px}
-.seg button{appearance:none;border:0;background:transparent;color:var(--muted);font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border-radius:99px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
-.search{appearance:none;background:var(--bg-2);border:1px solid var(--line);color:var(--fg);font:400 13px var(--f-body);padding:8px 12px;border-radius:99px;width:190px;max-width:100%}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
+.chip:not(.mood)[aria-pressed="false"]{opacity:.35}.chip.mood{color:var(--muted)}
+.chip.mood[aria-pressed="true"],.seg button[aria-pressed="true"]{background:var(--fg);color:#000;border-color:var(--fg)}
+.seg{display:inline-flex;gap:4px}
+.search{appearance:none;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--fg);font:400 13px var(--f-body);padding:9px 14px;border-radius:99px;width:200px;max-width:100%}
 .search::placeholder{color:var(--muted)}
 
-/* MAP */
-.map-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:4px;background:
-  radial-gradient(ellipse at 50% 40%, var(--bg-2), var(--bg) 70%)}
+/* ATLAS MAP */
+.map-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
 .map{position:relative;width:100%;min-width:920px;aspect-ratio:1000/700}
 .map canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.grat{position:absolute;inset:0;pointer-events:none;font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;color:var(--muted)}
-.grat span{position:absolute;white-space:nowrap}
-.cont{position:absolute;transform:translate(-50%,-100%);font-family:var(--f-display);font-weight:800;letter-spacing:-.03em;line-height:1;font-size:clamp(17px,1.9vw,24px);color:var(--c);pointer-events:none;text-align:center;opacity:.95;transition:opacity .4s;text-shadow:0 0 18px var(--bg),0 0 4px var(--bg);white-space:nowrap}
-.cont small{display:block;font-family:var(--f-mono);font-weight:400;font-size:10px;letter-spacing:.14em;color:var(--fg);opacity:.7;margin-top:4px}
+.cont{position:absolute;transform:translate(-50%,-100%);display:grid;justify-items:center;gap:8px;pointer-events:none;transition:opacity .4s;text-align:center}
+.cont .ball{width:var(--sz,38px);height:var(--sz,38px)}
+.cont b{font-family:var(--f-wide);font-weight:400;font-size:10px;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;text-shadow:0 0 10px #000,0 0 3px #000}
+.cont small{font-family:var(--f-wide);font-size:7.5px;letter-spacing:.16em;color:var(--muted);margin-top:-4px;white-space:nowrap;text-shadow:0 0 6px #000}
 .map.grid .cont{opacity:0}
-.axis{position:absolute;font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg);opacity:0;transition:opacity .4s;pointer-events:none}
-.map.grid .axis{opacity:.75}
-.quad{position:absolute;font-family:var(--f-display);font-weight:800;letter-spacing:-.04em;font-size:clamp(28px,4vw,54px);color:var(--fg);opacity:0;transition:opacity .4s;pointer-events:none;line-height:.8}
-.map.grid .quad{opacity:.09}
+.axis,.quad{position:absolute;pointer-events:none;opacity:0;transition:opacity .4s;font-family:var(--f-wide);text-transform:uppercase}
+.axis{font-size:8.5px;letter-spacing:.18em}
+.quad{font-size:clamp(18px,2.6vw,34px);letter-spacing:.2em;line-height:1}
+.map.grid .axis{opacity:.7}.map.grid .quad{opacity:.1}
 .pin{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;display:grid;place-items:center;text-decoration:none;z-index:2;transition:opacity .25s,transform .15s}
-.pin::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c);box-shadow:0 0 0 2px var(--bg),0 0 10px var(--c)}
-.pin:hover,.pin.sel{transform:scale(1.6);z-index:4}
-.pin.dim{opacity:.1}
-.pin.hit::after{content:"";position:absolute;inset:-4px;border:1.5px solid var(--fg);border-radius:50%}
-.tip{position:absolute;z-index:6;pointer-events:none;background:var(--fg);color:var(--bg);padding:8px 10px 9px;border-radius:3px;min-width:150px;max-width:240px;transform:translate(-50%,calc(-100% - 16px));opacity:0;transition:opacity .12s}
+.pin::before{content:"";width:4px;height:4px;border-radius:50%;background:#fff;box-shadow:0 0 3px 1px var(--c),0 0 10px 2px var(--c)}
+.pin:hover,.pin.sel{transform:scale(1.9);z-index:4}
+.pin.dim{opacity:.08}
+.pin.hit::after{content:"";position:absolute;inset:-3px;border:1px solid var(--fg);border-radius:50%}
+.tip{position:absolute;z-index:6;pointer-events:none;background:rgba(6,6,12,.92);border:1px solid var(--line);color:var(--fg);padding:10px 12px;border-radius:2px;min-width:160px;max-width:250px;transform:translate(-50%,calc(-100% - 16px));opacity:0;transition:opacity .12s;backdrop-filter:blur(6px)}
 .tip.on{opacity:1}
-.tip .t{font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1.1;letter-spacing:-.02em}
-.tip .a{font-size:12px;font-weight:500;margin-top:3px}
-.tip .m{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;margin-top:6px;opacity:.7;text-transform:uppercase}
-.tip .go{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;margin-top:4px;text-transform:uppercase}
-.map-note{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 20px;font-family:var(--f-kr);font-size:12px;color:var(--muted);margin-top:-16px}
+.tip .t{font-weight:700;font-size:16px;line-height:1.2}
+.tip .a{font-size:12px;color:var(--muted);margin-top:2px}
+.tip .m,.tip .go{font-family:var(--f-wide);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;margin-top:8px}
+.tip .go{color:var(--muted);margin-top:4px}
+.map-note{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 20px;font-size:12px;color:var(--muted);padding-top:8px}
 
-/* TOUCH CARD */
-.card{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--fg);color:var(--bg);
-  padding:14px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
-  display:flex;gap:14px;align-items:center;justify-content:space-between;transform:translateY(110%);transition:transform .25s}
-.card.on{transform:none}
-.card .info{min-width:0}
-.card .t{font-family:var(--f-display);font-weight:700;font-size:21px;line-height:1.1;letter-spacing:-.02em;overflow-wrap:anywhere}
-.card .a{font-size:13px;font-weight:500}
-.card .m{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.7;margin-top:4px}
-.card .btns{display:flex;gap:8px;flex:none}
-.card a,.card button{appearance:none;border:0;border-radius:99px;font:500 12px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:12px 14px;cursor:pointer;text-decoration:none}
-.card a{background:var(--bg);color:var(--fg)}
-.card button{background:transparent;color:var(--bg);border:1px solid currentColor}
-
-/* INDEX */
-.idx-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:18px}
-.idx-head h2{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(36px,5vw,60px);line-height:.95;letter-spacing:-.045em}
-.idx-head p{margin:0;font-family:var(--f-kr);color:var(--muted);font-size:13px;max-width:44ch}
-.idx{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:32px 24px;align-items:start}
+/* TRACK INDEX */
+.sec-head{text-align:center;padding:14vh 0 40px}
+.sec-head h2{margin:0;font-family:var(--f-wide);font-weight:400;font-size:clamp(20px,3vw,34px);letter-spacing:.3em;margin-right:-.3em}
+.sec-head p{margin:14px auto 0;max-width:52ch;color:var(--muted);font-size:13px}
+.idx{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:40px 28px;align-items:start}
 .idx section{min-width:0}
-.idx h3{margin:0 0 8px;font-family:var(--f-display);font-weight:800;font-size:21px;letter-spacing:-.03em;color:var(--c);line-height:1;display:flex;justify-content:space-between;align-items:baseline;gap:8px;border-bottom:2px solid var(--c);padding-bottom:6px}
-.idx h3 small{font-family:var(--f-mono);font-size:11px;font-weight:400;color:var(--muted)}
-.idx ol{list-style:none;margin:0;padding:0;display:grid}
-.idx a{display:grid;grid-template-columns:2.6em 1fr;gap:6px;padding:6px 0;border-bottom:1px solid var(--line);text-decoration:none;font-size:13px;align-items:baseline}
+.idx h3{margin:0 0 10px;display:flex;align-items:center;gap:12px;font-family:var(--f-wide);font-weight:400;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+.idx h3 .ball{width:22px;height:22px;flex:none}
+.idx h3 small{margin-left:auto;color:var(--muted);font-size:9px}
+.idx ol{list-style:none;margin:0;padding:0}
+.idx a{display:grid;grid-template-columns:2.8em 1fr;gap:6px;padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none;font-size:13px;align-items:baseline}
 .idx a:hover .tt{text-decoration:underline}
-.idx .no{font-family:var(--f-mono);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.idx .tt{font-weight:600;min-width:0;overflow-wrap:anywhere}
+.idx .no{font-family:var(--f-wide);font-size:8.5px;color:var(--muted);letter-spacing:.06em}
+.idx .tt{font-weight:600;overflow-wrap:anywhere}
 .idx .ar{display:block;font-weight:400;color:var(--muted);font-size:12px}
-.idx li.dim{opacity:.25}
-footer{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;border-top:1px solid var(--line);padding-top:14px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-@media (max-width:640px){.stats{gap:18px}.stat span{font-size:30px}.search{width:100%}.controls{position:static}}
-</style>
+.idx li.dim{opacity:.22}
 
-<div class="wrap">
+/* PLANETS — shared sphere */
+.ball{border-radius:50%;position:relative;flex:none;overflow:hidden;
+  background:
+    radial-gradient(circle at 30% 26%,rgba(255,255,255,.75),rgba(255,255,255,0) 26%),
+    radial-gradient(ellipse 60% 35% at 62% 38%,color-mix(in oklab,var(--c) 40%,#fff) ,transparent 70%),
+    radial-gradient(ellipse 45% 30% at 30% 68%,color-mix(in oklab,var(--c) 55%,#000),transparent 72%),
+    radial-gradient(ellipse 35% 22% at 75% 70%,color-mix(in oklab,var(--c) 65%,#fff),transparent 70%),
+    radial-gradient(ellipse 70% 18% at 45% 50%,color-mix(in oklab,var(--c) 80%,#000),transparent 70%),
+    var(--c);
+  box-shadow:inset -7px -9px 16px rgba(0,0,0,.65),inset 3px 3px 9px rgba(255,255,255,.3),0 0 22px color-mix(in oklab,var(--c) 50%,transparent),0 0 1.5px rgba(255,255,255,.7);
+  transform:rotate(var(--rot,0deg))}
+/* CHARTS */
+.ch-head{text-align:center;padding:10vh 0 10px}
+.ch-head h2{margin:0;font-family:var(--f-wide);font-weight:400;font-size:clamp(26px,5vw,60px);letter-spacing:.3em;margin-right:-.3em;line-height:1.15}
+.ch-head .tag{margin:16px 0 0;font-family:var(--f-wide);font-size:clamp(8.5px,1vw,11px);letter-spacing:.24em;text-transform:uppercase}
+.ch-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 26px;margin-top:22px;font-size:12px;color:var(--muted)}
+.live{display:inline-flex;align-items:center;gap:8px}
+.live i{width:6px;height:6px;border-radius:50%;background:var(--up);box-shadow:0 0 8px var(--up)}
+.live.stale i{background:var(--muted);box-shadow:none}
+@media (prefers-reduced-motion:no-preference){.live i{animation:pulse 2.4s ease-in-out infinite}}
+@keyframes pulse{50%{opacity:.25}}
+
+.orbit{position:relative;margin:30px auto 90px;max-width:1100px}
+.orbit svg{display:block;width:100%;height:auto;overflow:visible}
+.orbit path{fill:none;stroke:var(--orbit);stroke-width:1;vector-effect:non-scaling-stroke}
+.pl{position:absolute;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:10px;appearance:none;background:none;border:0;color:var(--fg);cursor:pointer;padding:0;font:inherit;text-align:center}
+.pl .ball{width:var(--sz);height:var(--sz);transition:transform .25s}
+.pl:hover .ball,.pl[aria-pressed="true"] .ball{transform:rotate(var(--rot,0deg)) scale(1.12)}
+.pl .ring{position:absolute;left:50%;top:calc(var(--sz)/2);width:calc(var(--sz) * 1.7);height:calc(var(--sz) * .5);transform:translate(-50%,-50%) rotate(-18deg);border:1px solid color-mix(in oklab,var(--c) 70%,#fff);border-radius:50%;opacity:.85;pointer-events:none}
+.pl .lbl{position:absolute;top:calc(var(--sz) + 10px);width:max-content;max-width:170px;display:grid;gap:3px;justify-items:center}
+.pl b{font-family:var(--f-wide);font-weight:400;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+.pl .pn{font-size:10.5px;color:var(--fg);opacity:.75;white-space:nowrap}
+.pl .one{font-size:11px;color:var(--muted);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl[aria-pressed="true"] b{text-decoration:underline;text-underline-offset:4px}
+.legend{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 28px;font-size:12px;color:var(--muted);margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend .ring-ico{width:22px;height:8px;border:1px solid var(--fg);border-radius:50%;transform:rotate(-18deg)}
+
+/* board: 17 charts at a glance */
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:24px}
+.mini{background:#000;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 14px 10px;min-width:0;cursor:pointer;appearance:none;border:0;color:var(--fg);text-align:left;font:inherit;display:grid;gap:10px;align-content:start}
+.mini:hover{background:#07070d}
+.mini[aria-pressed="true"]{background:#0b0b14;box-shadow:inset 0 0 0 1px var(--c)}
+.mini header{display:flex;align-items:center;gap:10px}
+.mini header .ball{width:16px;height:16px}
+.mini header small{margin-left:auto;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45%}
+.mini header b{font-family:var(--f-wide);font-weight:400;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini ol{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.mini li{display:grid;grid-template-columns:1.4em 1fr auto;gap:8px;align-items:baseline;font-size:12px;line-height:1.3}
+.mini li .r{font-family:var(--f-wide);font-size:8.5px;color:var(--muted)}
+.mini li .s{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini li .s small{color:var(--muted);font-size:11px}
+.mv{font-family:var(--f-wide);font-size:7.5px;letter-spacing:.06em;white-space:nowrap}
+.mv.up{color:var(--up)}.mv.dn{color:var(--down)}.mv.nw{color:#000;background:var(--up);padding:1px 4px;border-radius:2px}.mv.eq{color:var(--faint)}
+
+/* focus: one chart up close, giant planet rising (AOZ "SIWA") */
+.focus{position:relative;margin-top:16vh;text-align:center;padding-bottom:40px}
+.focus h3{margin:0;font-family:var(--f-wide);font-weight:400;font-size:clamp(18px,2.6vw,28px);letter-spacing:.22em;line-height:1.35}
+.focus .code{display:block;font-size:.8em}
+.focus .planet-rise{width:min(520px,80vw);aspect-ratio:2/1;margin:26px auto 0;overflow:hidden;position:relative;border-bottom:1px solid var(--line)}
+.focus .planet-rise .ball{position:absolute;left:0;top:0;width:100%;aspect-ratio:1;--rot:0deg;box-shadow:inset -30px -40px 70px rgba(0,0,0,.55),inset 10px 10px 40px rgba(255,255,255,.2),0 0 60px color-mix(in oklab,var(--c) 50%,transparent)}
+.focus table{width:100%;max-width:820px;margin:28px auto 0;border-collapse:collapse;text-align:left;font-size:13px}
+.focus th{font-family:var(--f-wide);font-weight:400;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:0 8px 10px;border-bottom:1px solid var(--line)}
+.focus td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:baseline}
+.focus td.r{font-family:var(--f-wide);font-size:10px;width:3em}
+.focus td.n{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.focus td .t{font-weight:600;text-decoration:none}.focus td a.t:hover{text-decoration:underline}
+.focus td .a{color:var(--muted);font-size:12px}
+.focus .open{display:inline-block;margin-top:22px;font-family:var(--f-wide);font-size:9px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border:1px solid var(--line);padding:11px 16px;border-radius:99px}
+.focus .open:hover{border-color:var(--fg)}
+.empty{text-align:center;color:var(--muted);padding:60px 0}
+
+/* touch card */
+.card{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(6,6,12,.96);border-top:1px solid var(--line);backdrop-filter:blur(8px);
+  padding:14px max(16px,env(safe-area-inset-right)) calc(16px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+  display:flex;gap:14px;align-items:center;justify-content:space-between;transform:translateY(110%);transition:transform .25s}
+.card:not(.on){visibility:hidden}.card.on{transform:none}
+.card .info{min-width:0}.card .t{font-weight:700;font-size:19px;line-height:1.2;overflow-wrap:anywhere}.card .a{font-size:13px;color:var(--muted)}
+.card .m{font-family:var(--f-wide);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px}
+.card .btns{display:flex;gap:8px;flex:none}
+.card a,.card button{appearance:none;border:1px solid var(--line);background:none;color:var(--fg);border-radius:99px;font-family:var(--f-wide);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;padding:11px 14px;cursor:pointer;text-decoration:none}
+.card a{background:var(--fg);color:#000;border-color:var(--fg)}
+
+footer{margin-top:16vh;border-top:1px solid var(--line);padding:26px 0 calc(40px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px 40px;font-size:11px;color:var(--muted)}
+footer .logo{color:var(--fg);font-size:12px}
+footer a{font-family:var(--f-wide);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
+footer a:hover{color:var(--fg)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media (max-width:720px){
+  nav{gap:16px;flex-wrap:wrap}.logo{font-size:13px;letter-spacing:.24em}.tabs{gap:16px}
+  .hero{padding-top:8vh}.search{width:100%}
+  .pl .one,.pl .pn{display:none}.pl b{font-size:7.5px}
+  .board{grid-template-columns:1fr 1fr}.mini{padding:12px 10px}.mini li{grid-template-columns:1.2em 1fr;}.mini li .mv{display:none}
+}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="page">
+<nav>
+  <a class="logo" href="#atlas">DO THE DANCE</a>
+  <div class="tabs">
+    <a href="#atlas" id="t-atlas" aria-current="page" data-i="tabAtlas">Atlas</a>
+    <a href="#charts" id="t-charts" data-i="tabCharts">Genre Charts</a>
+  </div>
+  <div class="lang" role="group" aria-label="Language" id="lang">
+    <button type="button" data-l="ko" aria-pressed="true">KO</button><button type="button" data-l="ja" aria-pressed="false">JA</button><button type="button" data-l="en" aria-pressed="false">EN</button><button type="button" data-l="zh" aria-pressed="false">ZH</button>
+  </div>
+</nav>
+
+<main class="wrap">
+<!-- ============ ATLAS ============ -->
+<div id="v-atlas">
   <header class="hero">
-    <div class="topline"><span>Playlist by <b>A.</b></span><span>songs for dance</span><span>Atlas edition · <b>276 tracks</b></span>
-      <div class="lang" role="group" aria-label="Language" id="lang">
-        <button type="button" data-l="ko" aria-pressed="true">KO</button><button type="button" data-l="ja" aria-pressed="false">JA</button><button type="button" data-l="en" aria-pressed="false">EN</button><button type="button" data-l="zh" aria-pressed="false">ZH</button>
-      </div></div>
-    <div><h1><span>Do</span><span class="out">the</span><span>Dance</span></h1>
-    <p class="tag" data-i="tag">An atlas of dance tracks, mapped by genre &amp; mood</p></div>
-    <div class="sub">
-      <p data-i="intro">장르는 대륙, 곡은 도시. 서쪽으로 갈수록 어둡고 관능적인 곡, 동쪽으로 갈수록 밝고 달콤한 곡, 북쪽으로 갈수록 에너지가 높은 곡이에요. 점을 누르면 Spotify로 이동합니다.</p>
-      <div class="stats">
-        <div class="stat"><span id="s-count">248</span><small>Tracks</small></div>
-        <div class="stat"><span>6</span><small>Continents</small></div>
-        <div class="stat"><span>4</span><small>Moods</small></div>
-      </div>
+    <h1>DO THE DANCE</h1>
+    <p class="tag" data-i="tag">An atlas of dance tracks, mapped by genre &amp; mood</p>
+    <p class="intro" data-i="intro"></p>
+    <div class="stats">
+      <div class="stat"><b id="s-count">0</b><small>Tracks</small></div>
+      <div class="stat"><b>6</b><small>Planets</small></div>
+      <div class="stat"><b>4</b><small>Moods</small></div>
     </div>
   </header>
 
   <div class="controls">
-    <div class="seg" role="group" aria-label="지도 보기 방식" id="seg">
-      <button type="button" id="m-atlas" aria-pressed="true" data-i="atlas">Atlas · 장르</button>
-      <button type="button" id="m-grid" aria-pressed="false" data-i="grid">Grid · 무드</button>
+    <div class="seg" role="group" id="seg">
+      <button type="button" id="m-atlas" aria-pressed="true" data-i="atlas">Atlas</button>
+      <button type="button" id="m-grid" aria-pressed="false" data-i="grid">Grid</button>
     </div>
-    <div class="group" id="genres"><span class="group-label">Genre</span></div>
-    <div class="group" id="moods"><span class="group-label">Mood</span></div>
-    <input class="search" id="q" type="search" placeholder="곡·아티스트 검색" aria-label="곡·아티스트 검색">
+    <div class="group" id="genres"></div>
+    <div class="group" id="moods"></div>
+    <input class="search" id="q" type="search">
   </div>
 
   <div class="map-scroll" id="scroller">
     <div class="map" id="map">
       <canvas id="land" aria-hidden="true"></canvas>
-      <div class="grat" id="grat"></div>
       <div id="labels"></div>
       <div id="pins"></div>
       <div class="tip" id="tip" role="tooltip"></div>
     </div>
   </div>
-  <div class="map-note"><span data-i="note">West ← 다크·관능 | 밝음·달콤 → East · North ↑ 피크 에너지</span><span id="m-hint" data-i="hint">휴대폰에서는 지도를 좌우로 밀어서 볼 수 있어요</span></div>
+  <div class="map-note"><span data-i="note"></span><span id="m-hint" data-i="hint"></span></div>
 
-  <div class="idx-head">
-    <h2>Track Index</h2>
-    <p data-i="idx">대륙별 곡 목록. 번호는 플레이리스트 수록 순서예요.</p>
-  </div>
+  <div class="sec-head"><h2>TRACK INDEX</h2><p data-i="idx"></p></div>
   <div class="idx" id="idx"></div>
+</div>
 
-  <footer>
-    <span>Do the Dance · Atlas edition</span>
-    <a href="https://open.spotify.com/playlist/4OmXtkJULWIiTAxxcHPePT" target="_blank" rel="noopener" data-i="open">전체 플레이리스트 열기 ↗</a>
-  </footer>
+<!-- ============ GENRE CHARTS ============ -->
+<div id="v-charts" hidden>
+  <header class="ch-head">
+    <h2>17 ORBITS</h2>
+    <p class="tag" data-i="chTag">Spotify genre charts, all in one sky</p>
+    <div class="ch-meta">
+      <span class="live" id="live"><i></i><span id="live-t"></span></span>
+      <span id="period"></span>
+    </div>
+  </header>
+
+  <div class="orbit" id="orbit">
+    <svg id="orbit-svg" aria-hidden="true"><path id="orbit-path"/></svg>
+    <div id="planets"></div>
+  </div>
+  <div class="legend">
+    <span><span class="ball" style="--c:#aaa;width:10px;height:10px"></span><span class="ball" style="--c:#aaa;width:18px;height:18px"></span><span data-i="lgSize"></span></span>
+    <span><span class="ring-ico"></span><span data-i="lgRing"></span></span>
+  </div>
+
+  <div class="sec-head" style="padding-top:12vh;padding-bottom:0"><h2>AT A GLANCE</h2><p data-i="chBoard"></p></div>
+  <div class="board" id="board"></div>
+
+  <section class="focus" id="focus" aria-live="polite"></section>
+</div>
+
+<footer>
+  <div><div class="logo">DO THE DANCE</div><div style="margin-top:10px" data-i="foot"></div></div>
+  <div style="display:grid;gap:10px;align-content:start">
+    <a href="https://open.spotify.com/playlist/4OmXtkJULWIiTAxxcHPePT" target="_blank" rel="noopener" data-i="open"></a>
+    
+  </div>
+</footer>
+</main>
 </div>
 
 <div class="card" id="card" aria-live="polite">
   <div class="info"><div class="t" id="c-t"></div><div class="a" id="c-a"></div><div class="m" id="c-m"></div></div>
-  <div class="btns"><a id="c-go" href="#" target="_blank" rel="noopener">Spotify ↗</a><button type="button" id="c-x" aria-label="닫기">✕</button></div>
+  <div class="btns"><a id="c-go" href="#" target="_blank" rel="noopener">Spotify</a><button type="button" id="c-x">✕</button></div>
 </div>
 
 <script>
+/* ---------- starfield (static, drawn once per resize) ---------- */
+(function(){const c=document.getElementById("sky"),x=c.getContext("2d");let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  function paint(){const d=Math.min(2,devicePixelRatio||1),w=innerWidth,h=innerHeight;c.width=w*d;c.height=h*d;x.setTransform(d,0,0,d,0,0);seed=7;
+    const g=x.createRadialGradient(w*.5,h*.15,0,w*.5,h*.15,Math.max(w,h)*.9);g.addColorStop(0,"#0a0a16");g.addColorStop(1,"#000");x.fillStyle=g;x.fillRect(0,0,w,h);
+    const n=Math.round(w*h/1400);for(let i=0;i<n;i++){const r=rnd(),s=r>.985?1.4:r>.9?.9:.5;x.globalAlpha=.25+rnd()*.7;x.fillStyle=rnd()>.93?"#cfe0ff":"#fff";x.beginPath();x.arc(rnd()*w,rnd()*h,s,0,6.283);x.fill()}x.globalAlpha=1}
+  paint();addEventListener("resize",paint)})();
+</script>
+<script>
 const W=1000,H=700;
 const GENRES={
-  RAP:{name:"Hip-Hop Highlands",kr:"힙합 · 댄스홀 · 레게톤",c:"--rap",cx:190,cy:215,sx:270,sy:300},
-  POP:{name:"Dance-Pop Mainland",kr:"댄스팝 · 걸그룹",c:"--pop",cx:510,cy:200,sx:270,sy:280},
-  KJ:{name:"K/J Peninsula",kr:"K-POP · J-POP · 아시아 힙합",c:"--kj",cx:832,cy:225,sx:260,sy:290},
-  RNB:{name:"R&B Coast",kr:"R&B · 코레오 클래식",c:"--rnb",cx:215,cy:530,sx:270,sy:260},
-  HYP:{name:"Hyperpop Isles",kr:"하이퍼팝 · 빔보팝",c:"--hyp",cx:520,cy:520,sx:250,sy:270},
-  GRV:{name:"Groove Lagoon",kr:"펑크 · 디스코 · 하우스 · 네오소울",c:"--groove",cx:830,cy:540,sx:250,sy:250}
+  RAP:{name:"Hip-Hop",code:"HHP-R",c:"--rap",cx:190,cy:215,sx:270,sy:300},
+  POP:{name:"Dance-Pop",code:"DNP-P",c:"--pop",cx:510,cy:200,sx:270,sy:280},
+  KJ:{name:"K / J",code:"KJP-K",c:"--kj",cx:832,cy:225,sx:260,sy:290},
+  RNB:{name:"R&B",code:"RNB-C",c:"--rnb",cx:215,cy:530,sx:270,sy:260},
+  HYP:{name:"Hyperpop",code:"HYP-I",c:"--hyp",cx:520,cy:520,sx:250,sy:270},
+  GRV:{name:"Groove",code:"GRV-L",c:"--groove",cx:830,cy:540,sx:250,sy:250}
 };
-const MOODS={FIERCE:"카리스마",SULTRY:"관능",EUPHORIC:"짜릿함",SWEET:"달콤함"};
+const MOODS={FIERCE:"",SULTRY:"",EUPHORIC:"",SWEET:""};
 const I18N={
  ko:{tag:"An atlas of dance tracks, mapped by genre & mood",
   intro:"장르는 대륙, 곡은 도시. 서쪽으로 갈수록 어둡고 관능적인 곡, 동쪽으로 갈수록 밝고 달콤한 곡, 북쪽으로 갈수록 에너지가 높은 곡이에요. 점을 누르면 Spotify로 이동합니다.",
@@ -221,10 +348,27 @@ const I18N={
   mood:{FIERCE:"霸气",SULTRY:"性感",EUPHORIC:"燃",SWEET:"甜美"},
   sub:{RAP:"嘻哈 · 舞厅雷鬼 · 雷鬼动",POP:"舞曲流行 · 女团",KJ:"K-POP · J-POP · 亚洲嘻哈",RNB:"R&B · 编舞经典",HYP:"超流行 · Bimbo Pop",GRV:"放克 · 迪斯科 · 浩室 · 新灵魂"}}
 };
+
+const EXTRA={
+ ko:{tabAtlas:"아틀라스",tabCharts:"장르 차트",chTag:"Spotify 장르 플레이리스트 17개를 한 하늘에",chBoard:"플레이리스트마다 상위 5곡과 지난 변경 이후 순서 변화예요. 누르면 아래에서 50위까지 볼 수 있어요.",
+  lgSize:"행성 크기 = 지난 변경 이후 순서가 움직인 정도",lgRing:"고리 = 1위가 바뀐 플레이리스트",live:"Spotify에서 매시간 확인",stale:"데이터를 불러오지 못했어요 · 5분 뒤 다시 시도",upd:"마지막 변경",
+  colT:"곡",colM:"변동",colD:"수록",openChart:"Spotify에서 플레이리스트 열기",empty:"아직 차트 데이터가 없어요. charts.json이 올라오면 자동으로 표시돼요.",foot:"Playlist by A. · 장르 차트는 Spotify 공식 장르 플레이리스트 기준",newE:"NEW",day:"일",today:"오늘",period:"17개 플레이리스트 · 상위 50곡"},
+ ja:{tabAtlas:"アトラス",tabCharts:"ジャンルチャート",chTag:"Spotifyのジャンル別プレイリスト17本を、ひとつの宇宙に",chBoard:"各プレイリストのトップ5と、前回の変更からの順位の動き。タップすると下で50位まで表示します。",
+  lgSize:"惑星の大きさ = 前回の変更からの順位の動き",lgRing:"リング = 1位が入れ替わったプレイリスト",live:"Spotifyを1時間ごとに確認",stale:"データを取得できませんでした · 5分後に再試行",upd:"最終変更",
+  colT:"曲",colM:"変動",colD:"収録",openChart:"Spotifyでプレイリストを開く",empty:"チャートデータはまだありません。charts.jsonが届くと自動で表示されます。",foot:"Playlist by A. · ジャンルチャートはSpotify公式ジャンルプレイリストより",newE:"NEW",day:"日",today:"今日",period:"17プレイリスト · トップ50"},
+ en:{tabAtlas:"Atlas",tabCharts:"Genre Charts",chTag:"Seventeen Spotify genre playlists, one sky",chBoard:"Top five of every playlist, with movement since the last change. Pick one to see its top 50 below.",
+  lgSize:"Planet size = how much the order moved since the last change",lgRing:"Ring = a new #1",live:"Checked on Spotify every hour",stale:"Couldn't load chart data · retrying in 5 min",upd:"Last change",
+  colT:"Track",colM:"Move",colD:"In list",openChart:"Open the playlist in Spotify",empty:"No chart data yet. It appears here as soon as charts.json is published.",foot:"Playlist by A. · Genre charts follow Spotify's official genre playlists",newE:"NEW",day:"d",today:"today",period:"17 playlists · top 50"},
+ zh:{tabAtlas:"图谱",tabCharts:"流派榜单",chTag:"17 个 Spotify 流派歌单，同一片星空",chBoard:"每个歌单的前五名及上次变动以来的排名变化。点击即可在下方查看前 50 名。",
+  lgSize:"行星大小 = 上次变动以来的排名变化幅度",lgRing:"光环 = 第一名易主的歌单",live:"每小时检查 Spotify",stale:"无法加载榜单数据 · 5 分钟后重试",upd:"最近变动",
+  colT:"歌曲",colM:"变动",colD:"收录",openChart:"在 Spotify 打开歌单",empty:"暂无榜单数据。charts.json 发布后会自动显示。",foot:"Playlist by A. · 流派榜单依据 Spotify 官方流派歌单",newE:"NEW",day:"天",today:"今天",period:"17 个歌单 · 前 50 名"}
+};
+Object.keys(EXTRA).forEach(k=>Object.assign(I18N[k],EXTRA[k]));
+Object.assign(I18N.ko,{intro:"장르는 행성, 곡은 별. 서쪽으로 갈수록 어둡고 관능적인 곡, 동쪽으로 갈수록 밝고 달콤한 곡, 북쪽으로 갈수록 에너지가 높은 곡이에요. 별을 누르면 Spotify로 이동합니다.",idx:"행성별 곡 목록. 번호는 플레이리스트 수록 순서예요."});Object.assign(I18N.ja,{intro:"ジャンルは惑星、曲は星。西へ行くほどダークで官能的な曲、東へ行くほど明るく甘い曲、北へ行くほどエネルギーの高い曲が並びます。星をタップするとSpotifyで開きます。",idx:"惑星別の曲リスト。番号はプレイリストの収録順です。"});Object.assign(I18N.en,{intro:"Genres are planets, songs are stars. Head west for darker, sultrier tracks, east for brighter, sweeter ones, and north for higher energy. Tap a star to open it in Spotify.",idx:"Tracks by planet. Numbers follow the playlist order."});Object.assign(I18N.zh,{intro:"曲风是行星，歌曲是星星。越往西越暗黑性感，越往东越明亮甜美，越往北能量越高。点击星星即可在 Spotify 中打开。",idx:"按行星分类的歌曲列表。编号为歌单收录顺序。"});
+I18N.en.mood={FIERCE:"",SULTRY:"",EUPHORIC:"",SWEET:""};
 let lang="ko";
 try{const saved=localStorage.getItem("dtd-lang");if(I18N[saved])lang=saved;else{const nav=(navigator.language||"").slice(0,2);if(I18N[nav])lang=nav}}catch(e){}
 const L=()=>I18N[lang];
-// [title, artist, genre, brightness 0=dark/sultry → 1=bright/sweet, energy 0→1]  (null = 중복 수록곡)
 const T=[
 ["IDFKA","Cobrah","HYP",.25,.85],["Purrr","Slayyyter","HYP",.6,.7],["VULGAR (with Madonna)","Sam Smith, Madonna","POP",.2,.75],["美人","CHANMINA","KJ",.3,.8],
 ["Unholy (feat. Kim Petras)","Sam Smith, Kim Petras","POP",.15,.72],["GODS","League of Legends, NewJeans","KJ",.35,.9],["Salute","Little Mix","POP",.3,.88],["16 Shots","Stefflon Don","RAP",.2,.78],
@@ -308,7 +452,6 @@ function link(t,a){const clean=t.replace(/\s*\((feat|with|Prod|Feat|FT|With)[^)]
 const songs=[];T.forEach((r,i)=>{if(!r)return;const [t,a,g,b,e]=r;songs.push({no:i+1,t,a,g,b,e,mood:moodOf(b,e),url:link(t,a)})});
 document.getElementById("s-count").textContent=songs.length;
 
-/* positions: per-genre centred spread (atlas) and pure mood×energy plane (grid), then relaxed so dots don't stack */
 const mean={};keys.forEach(k=>{const l=songs.filter(s=>s.g===k);mean[k]=[l.reduce((n,s)=>n+s.b,0)/l.length,l.reduce((n,s)=>n+s.e,0)/l.length]});
 const clampX=x=>Math.max(16,Math.min(W-16,x)),clampY=y=>Math.max(16,Math.min(H-16,y));
 songs.forEach((s,i)=>{const G=GENRES[s.g],j1=hash(s.t+s.a)-.5,j2=hash(s.a+s.t+i)-.5;
@@ -323,15 +466,14 @@ songs.forEach(s=>s.p=[...s.atlas]);
 const state={mode:"atlas",genres:new Set(keys),mood:null,q:""};
 const map=document.getElementById("map"),pinsEl=document.getElementById("pins"),tip=document.getElementById("tip");
 
-/* graticule + labels */
-const grat=document.getElementById("grat");
-[0.2,0.4,0.6,0.8].forEach((f,k)=>{const s=document.createElement("span");s.style.left=(f*100)+"%";s.style.top="6px";s.textContent=["W 72°","W 36°","E 36°","E 72°"][k];s.style.transform="translateX(-50%)";grat.append(s)});
-[0.25,0.5,0.75].forEach((f,k)=>{const s=document.createElement("span");s.style.top=(f*100)+"%";s.style.left="8px";s.textContent=["N 60°","EQ 0°","S 60°"][k];grat.append(s)});
+/* planet labels for each genre */
 const labels=document.getElementById("labels");
-keys.forEach(k=>{const G=GENRES[k];const l=songs.filter(s=>s.g===k);const top=Math.min(...l.map(s=>s.atlas[1]));
+keys.forEach((k,i)=>{const G=GENRES[k];const l=songs.filter(s=>s.g===k);const top=Math.min(...l.map(s=>s.atlas[1]));G.top=Math.max(70,top-14);G.sz=26+l.length/3;
   const d=document.createElement("div");d.className="cont";d.style.setProperty("--c",col(k));
-  d.style.left=(G.cx/W*100)+"%";d.style.top=(Math.max(46,top-12)/H*100)+"%";d.textContent=G.name;G.subEl=document.createElement("small");d.append(G.subEl);labels.append(d)});
-[["← Dark · Sultry","4%","50%"],["Bright · Sweet →","96%","50%"],["↑ Peak hype","50%","3%"],["↓ Slow burn","50%","97%"]].forEach(([t,x,y])=>{const d=document.createElement("div");d.className="axis";d.textContent=t;d.style.left=x;d.style.top=y;d.style.transform="translate("+(x==="96%"?"-100%":x==="4%"?"0":"-50%")+",-50%)";labels.append(d)});
+  d.style.left=(G.cx/W*100)+"%";d.style.top=(G.top/H*100)+"%";
+  d.innerHTML='<span class="ball" style="--sz:'+G.sz+'px;--rot:'+(i*60)+'deg"></span><b></b><small></small>';
+  d.querySelector("b").textContent=G.name;d.querySelector("small").textContent=G.code+String(l.length).padStart(3,"0");labels.append(d)});
+[["← Dark · Sultry","4%","50%"],["Bright · Sweet →","96%","50%"],["↑ Peak hype","50%","3%"],["↓ Slow burn","50%","97%"]].forEach(([t,x,y])=>{const d=document.createElement("div");d.className="axis";d.textContent=t;d.style.left=x;d.style.top=y;d.style.transform="translate("+(x==="4%"?"0":x==="96%"?"-100%":"-50%")+",-50%)";labels.append(d)});
 [["Fierce","6%","8%"],["Euphoric","62%","8%"],["Sultry","6%","74%"],["Sweet","70%","74%"]].forEach(([t,x,y])=>{const d=document.createElement("div");d.className="quad";d.textContent=t;d.style.left=x;d.style.top=y;labels.append(d)});
 
 /* pins */
@@ -343,7 +485,7 @@ songs.forEach(s=>{const a=document.createElement("a");a.className="pin";a.href=s
   a.addEventListener("mouseleave",hideTip);a.addEventListener("blur",hideTip);
   a.addEventListener("click",e=>{if(touch&&selected!==s){e.preventDefault();openCard(s)}});
   s.el=a;pinsEl.append(a)});
-function meta(s){return ("#"+String(s.no).padStart(3,"0")+" · "+L().sub[s.g].split(" · ")[0]+" · "+s.mood+" "+L().mood[s.mood]).trim()}
+function meta(s){return ("#"+String(s.no).padStart(3,"0")+"  "+GENRES[s.g].name+"  "+s.mood+" "+(L().mood[s.mood]||"")).trim()}
 function showTip(s){if(touch)return;tip.innerHTML='<div class="t"></div><div class="a"></div><div class="m"></div><div class="go"></div>';tip.querySelector(".go").textContent=L().go;
   tip.querySelector(".t").textContent=s.t;tip.querySelector(".a").textContent=s.a;tip.querySelector(".m").textContent=meta(s);
   tip.style.left=(s.p[0]/W*100)+"%";tip.style.top=(s.p[1]/H*100)+"%";
@@ -357,14 +499,13 @@ document.getElementById("c-x").addEventListener("click",()=>{card.classList.remo
 
 /* filters */
 const gWrap=document.getElementById("genres");
-const short={RAP:"Hip-Hop",POP:"Pop",KJ:"K/J",RNB:"R&B",HYP:"Hyperpop",GRV:"Groove"};
 keys.forEach(k=>{const b=document.createElement("button");b.type="button";b.className="chip";b.style.setProperty("--c",col(k));b.setAttribute("aria-pressed","true");
-  b.innerHTML="<i></i>";b.append(short[k]);b.addEventListener("click",()=>{
+  b.innerHTML="<i></i>";b.append(GENRES[k].name);b.addEventListener("click",()=>{
     if(state.genres.has(k)&&state.genres.size===keys.length){state.genres=new Set([k])}else if(state.genres.has(k)){state.genres.delete(k);if(!state.genres.size)state.genres=new Set(keys)}else state.genres.add(k);
     [...gWrap.querySelectorAll(".chip")].forEach((c,i)=>c.setAttribute("aria-pressed",state.genres.has(keys[i])));apply()});gWrap.append(b)});
 const mWrap=document.getElementById("moods");
-Object.entries(MOODS).forEach(([k,kr])=>{const b=document.createElement("button");b.type="button";b.className="chip mood";b.setAttribute("aria-pressed","false");b.textContent=k;b.title=kr;
-  b.dataset.m=k;b.addEventListener("click",()=>{state.mood=state.mood===k?null:k;[...mWrap.querySelectorAll(".chip")].forEach(c=>c.setAttribute("aria-pressed",c.textContent===state.mood));apply()});mWrap.append(b)});
+Object.keys(MOODS).forEach(k=>{const b=document.createElement("button");b.type="button";b.className="chip mood";b.setAttribute("aria-pressed","false");b.textContent=k;
+  b.dataset.m=k;b.addEventListener("click",()=>{state.mood=state.mood===k?null:k;[...mWrap.querySelectorAll(".chip")].forEach(c=>c.setAttribute("aria-pressed",c.dataset.m===state.mood));apply()});mWrap.append(b)});
 document.getElementById("q").addEventListener("input",e=>{state.q=e.target.value.trim().toLowerCase();apply()});
 function visible(s){return state.genres.has(s.g)&&(!state.mood||s.mood===state.mood)}
 function apply(){let n=0;songs.forEach(s=>{const v=visible(s);const hit=state.q&&(s.t+" "+s.a).toLowerCase().includes(state.q);
@@ -382,47 +523,101 @@ function animate(){hideTip();const from=songs.map(s=>[...s.p]);const t0=performa
   requestAnimationFrame(step)}
 function place(){songs.forEach(s=>{s.el.style.left=(s.p[0]/W*100)+"%";s.el.style.top=(s.p[1]/H*100)+"%"})}
 
-/* land: halftone metaball continents */
+/* nebulae + orbit line through the six planets */
 const cv=document.getElementById("land"),ctx=cv.getContext("2d");
 function resize(){const r=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);cv.width=r.width*dpr;cv.height=r.height*dpr;const sc=r.width/W;ctx.setTransform(dpr*sc,0,0,dpr*sc,0,0);draw()}
 const rgb={};keys.forEach(k=>{const h=col(k).replace("#","");rgb[k]=[0,2,4].map(i=>parseInt(h.substr(i,2),16))});
-function draw(){ctx.clearRect(0,0,W,H);const step=9,R2=26*26;const vis=songs.filter(visible);
-  ctx.fillStyle="rgba(141,135,163,.13)";for(let y=step/2;y<H;y+=step)for(let x=step/2;x<W;x+=step)ctx.fillRect(x-.6,y-.6,1.2,1.2);
-  const f={};
-  for(let y=step/2;y<H;y+=step)for(let x=step/2;x<W;x+=step){let best=0,bk=null;for(const k of keys)f[k]=0;
-    for(const s of vis){const dx=x-s.p[0];if(dx>90||dx<-90)continue;const dy=y-s.p[1];if(dy>90||dy<-90)continue;f[s.g]+=R2/(dx*dx+dy*dy+50)}
-    for(const k of keys)if(f[k]>best){best=f[k];bk=k}
-    if(best>1.05){const r=Math.min(3.3,1+(best-1.05)*.8);const c=rgb[bk];ctx.fillStyle="rgba("+c[0]+","+c[1]+","+c[2]+","+(state.mode==="grid"?.4:.48)+")";ctx.beginPath();ctx.arc(x,y,r,0,6.283);ctx.fill()}}
-  if(state.mode==="grid"){ctx.strokeStyle="rgba(243,239,249,.22)";ctx.lineWidth=1;ctx.setLineDash([3,5]);ctx.beginPath();ctx.moveTo(60+.5*880,20);ctx.lineTo(60+.5*880,H-20);
+const ORDER=["RAP","POP","KJ","GRV","HYP","RNB"];
+function draw(){ctx.clearRect(0,0,W,H);ctx.save();ctx.globalCompositeOperation="lighter";
+  for(const s of songs){if(!visible(s))continue;const c=rgb[s.g],g=ctx.createRadialGradient(s.p[0],s.p[1],0,s.p[0],s.p[1],58);
+    g.addColorStop(0,"rgba("+c+","+(state.mode==="grid"?.07:.09)+")");g.addColorStop(1,"rgba("+c+",0)");ctx.fillStyle=g;ctx.fillRect(s.p[0]-58,s.p[1]-58,116,116)}
+  ctx.restore();
+  ctx.strokeStyle="rgba(242,241,247,"+(state.mode==="atlas"?.42:.0)+")";ctx.lineWidth=1;
+  if(state.mode==="atlas"){const cy=k=>GENRES[k].top-34-GENRES[k].sz/2;const P=[[-40,cy("RAP")-30]].concat(ORDER.map(k=>[GENRES[k].cx,cy(k)]));P.push([-40,cy("RNB")+60]);
+    ctx.beginPath();ctx.moveTo(P[0][0],P[0][1]);for(let i=1;i<P.length;i++){const a=P[i-1],b=P[i];const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2;ctx.quadraticCurveTo(a[0],a[1],mx,my)}ctx.lineTo(P[P.length-1][0],P[P.length-1][1]);ctx.stroke()}
+  if(state.mode==="grid"){ctx.strokeStyle="rgba(242,241,247,.22)";ctx.setLineDash([2,6]);ctx.beginPath();ctx.moveTo(60+.5*880,20);ctx.lineTo(60+.5*880,H-20);
     const ym=50+(1-(.62-.28)/.72)*(H-110);ctx.moveTo(20,ym);ctx.lineTo(W-20,ym);ctx.stroke();ctx.setLineDash([])}}
 new ResizeObserver(resize).observe(cv);
 
 /* index */
 const idx=document.getElementById("idx");
-keys.forEach(k=>{const G=GENRES[k];const list=songs.filter(s=>s.g===k);const sec=document.createElement("section");sec.style.setProperty("--c",col(k));
-  sec.innerHTML="<h3>"+G.name.replace("&","&amp;")+"<small>"+list.length+"</small></h3><ol></ol>";const ol=sec.querySelector("ol");
+keys.forEach((k,i)=>{const G=GENRES[k];const list=songs.filter(s=>s.g===k);const sec=document.createElement("section");sec.style.setProperty("--c",col(k));
+  sec.innerHTML='<h3><span class="ball" style="--rot:'+(i*60)+'deg"></span><span></span><small>'+list.length+'</small></h3><ol></ol>';sec.querySelector("h3 span:nth-child(2)").textContent=G.name;const ol=sec.querySelector("ol");
   list.forEach(s=>{const li=document.createElement("li");const a=document.createElement("a");a.href=s.url;a.target="_blank";a.rel="noopener";
     a.innerHTML='<span class="no"></span><span class="tt"></span>';a.querySelector(".no").textContent=String(s.no).padStart(3,"0");
     const tt=a.querySelector(".tt");tt.textContent=s.t;const ar=document.createElement("span");ar.className="ar";ar.textContent=s.a;tt.append(ar);
     li.append(a);ol.append(li);s.li=li});idx.append(sec)});
+place();
 
-/* language */
+/* =================== GENRE CHARTS =================== */
+const DATA_URL="charts.json",POLL=5*60*1000;
+let CH=null,chSel=0,lastStamp=null,loadFailed=false;
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const hueOf=i=>"hsl("+Math.round((i*360/17+285)%360)+" 82% 64%)";
+function moveOf(t){if(t.p===undefined)return{c:"eq",s:"·"};if(t.p===null)return{c:"nw",s:L().newE};const d=t.p-t.r;return d>0?{c:"up",s:"▲"+d}:d<0?{c:"dn",s:"▼"+(-d)}:{c:"eq",s:"—"}}
+function turnover(ch){const n=ch.tracks.length||1;return ch.tracks.reduce((s,t)=>s+(t.p===undefined?0:t.p===null?1:Math.min(1,Math.abs(t.p-t.r)/10)),0)/n}
+function newTop(ch){const t=ch.tracks[0];return !!t&&t.p!==undefined&&t.p!==1}
+
+async function loadCharts(){
+  try{const r=await fetch(DATA_URL+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;const d=await r.json();loadFailed=false;
+    if(d.updated!==lastStamp){lastStamp=d.updated;CH=d;if(chSel>=CH.charts.length)chSel=0;renderCharts()}}
+  catch(e){loadFailed=true;if(!CH)renderCharts()}
+  renderLive()}
+function renderLive(){const D=L(),el=document.getElementById("live");el.classList.toggle("stale",loadFailed);
+  let t=loadFailed?D.stale:D.live;if(CH&&CH.updated){t+="  ·  "+D.upd+" "+new Date(CH.updated).toLocaleString(lang,{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"})}
+  document.getElementById("live-t").textContent=t;document.getElementById("period").textContent=CH?L().period:""}
+
+function orbitPath(w,h,rows,xl,xr){const pad=h/(rows*2),gap=(h-2*pad)/(rows-1);const P=[];for(let i=0;i<rows;i++)P.push([i%2?xl:xr,pad+i*gap]);
+  let d="M "+(-w*.08)+" "+(pad-gap*.35)+" C "+(w*.3)+" "+(pad-gap*.35)+" "+P[0][0]+" "+(P[0][1]-gap*.45)+" "+P[0][0]+" "+P[0][1];
+  for(let i=0;i<rows-1;i++){const a=P[i],b=P[i+1];d+=" C "+a[0]+" "+(a[1]+gap*.6)+" "+b[0]+" "+(b[1]-gap*.6)+" "+b[0]+" "+b[1]}
+  const z=P[rows-1];d+=" C "+z[0]+" "+(z[1]+gap*.45)+" "+(z[0]<w/2?w*.7:w*.3)+" "+(z[1]+gap*.4)+" "+(z[0]<w/2?w*1.08:-w*.08)+" "+(z[1]+gap*.4);return d}
+function layoutOrbit(){if(!CH||!CH.charts.length)return;const mob=innerWidth<720;const w=mob?400:1000,h=mob?2050:1080;
+  const svg=document.getElementById("orbit-svg"),path=document.getElementById("orbit-path");svg.setAttribute("viewBox","0 0 "+w+" "+h);
+  path.setAttribute("d",orbitPath(w,h,mob?9:5,mob?78:120,mob?322:880));
+  const L0=path.getTotalLength(),n=CH.charts.length,a=.075,b=.93;
+  document.querySelectorAll(".pl").forEach((el,i)=>{const p=path.getPointAtLength(L0*(a+(b-a)*(i/(n-1||1))));el.style.left=(p.x/w*100)+"%";el.style.top=(p.y/h*100)+"%";
+    const tv=turnover(CH.charts[i]);el.style.setProperty("--sz",Math.round((mob?28:36)+tv*(mob?26:44))+"px")})}
+
+function renderCharts(){const D=L(),pl=document.getElementById("planets"),bd=document.getElementById("board"),fc=document.getElementById("focus");
+  if(!CH||!CH.charts||!CH.charts.length){pl.innerHTML="";bd.innerHTML="";document.getElementById("orbit-path").setAttribute("d","");fc.innerHTML='<p class="empty">'+esc(D.empty)+'</p>';return}
+  pl.innerHTML=CH.charts.map((ch,i)=>{const t=ch.tracks[0]||{};return '<button type="button" class="pl" data-i="'+i+'" aria-pressed="'+(i===chSel)+'" style="--c:'+hueOf(i)+'">'+
+    '<span class="ball" style="--rot:'+(i*47)+'deg"></span>'+(newTop(ch)?'<span class="ring"></span>':'')+
+    '<span class="lbl"><b>'+esc(ch.genre)+'</b><span class="pn">'+esc(ch.name)+'</span><span class="one">'+esc(t.t)+'</span></span></button>'}).join("");
+  bd.innerHTML=CH.charts.map((ch,i)=>'<button type="button" class="mini" data-i="'+i+'" aria-pressed="'+(i===chSel)+'" style="--c:'+hueOf(i)+'">'+
+    '<header><span class="ball" style="--rot:'+(i*47)+'deg"></span><b>'+esc(ch.genre)+'</b><small>'+esc(ch.name)+'</small></header><ol>'+
+    ch.tracks.slice(0,5).map(t=>{const m=moveOf(t);return '<li><span class="r">'+t.r+'</span><span class="s">'+esc(t.t)+' <small>'+esc(t.a)+'</small></span><span class="mv '+m.c+'">'+m.s+'</span></li>'}).join("")+'</ol></button>').join("");
+  document.querySelectorAll(".pl,.mini").forEach(b=>b.addEventListener("click",()=>{chSel=+b.dataset.i;renderCharts();
+    if(b.classList.contains("pl")||innerWidth<720)document.getElementById("focus").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})}));
+  renderFocus();layoutOrbit()}
+function ago(d){if(!d)return"";const n=Math.floor((Date.now()-Date.parse(d))/864e5);return n<1?L().today:n+L().day}
+function renderFocus(){const D=L(),ch=CH.charts[chSel],fc=document.getElementById("focus");const showD=ch.tracks.some(t=>ago(t.since)!==D.today);
+  fc.style.setProperty("--c",hueOf(chSel));
+  fc.innerHTML='<h3>'+esc(ch.genre.toUpperCase())+'<span class="code">'+esc(ch.name)+'</span></h3>'+
+   '<div class="planet-rise"><span class="ball" style="--c:'+hueOf(chSel)+'"></span></div>'+
+   '<table><thead><tr><th>#</th><th>'+esc(D.colT)+'</th><th>'+esc(D.colM)+'</th>'+(showD?'<th style="text-align:right">'+esc(D.colD)+'</th>':'')+'</tr></thead><tbody>'+
+   ch.tracks.map(t=>{const m=moveOf(t);return '<tr><td class="r">'+t.r+'</td><td><a class="t" href="https://open.spotify.com/track/'+esc(t.id)+'" target="_blank" rel="noopener">'+esc(t.t)+'</a><div class="a">'+esc(t.a)+'</div></td><td><span class="mv '+m.c+'">'+m.s+'</span></td>'+(showD?'<td class="n">'+ago(t.since)+'</td>':'')+'</tr>'}).join("")+
+   '</tbody></table><a class="open" href="https://open.spotify.com/playlist/'+esc(ch.pid)+'" target="_blank" rel="noopener">'+esc(D.openChart)+'</a>'}
+addEventListener("resize",()=>{clearTimeout(window.__ro);window.__ro=setTimeout(layoutOrbit,120)});
+
+/* =================== ROUTING + LANGUAGE =================== */
+function route(){const v=location.hash==="#charts"?"charts":"atlas";document.getElementById("v-atlas").hidden=v!=="atlas";document.getElementById("v-charts").hidden=v!=="charts";
+  document.getElementById("t-atlas").toggleAttribute("aria-current",v==="atlas");document.getElementById("t-charts").toggleAttribute("aria-current",v==="charts");
+  if(v==="atlas"){document.getElementById("t-atlas").setAttribute("aria-current","page");requestAnimationFrame(resize)}else{document.getElementById("t-charts").setAttribute("aria-current","page");layoutOrbit()}}
+addEventListener("hashchange",()=>{route();scrollTo(0,0)});
 function applyLang(l){lang=l;const D=L();document.documentElement.lang=l;
-  document.querySelectorAll("[data-i]").forEach(el=>{el.textContent=D[el.dataset.i]});
+  document.querySelectorAll("[data-i]").forEach(el=>{if(el.closest(".pl,.mini"))return;if(D[el.dataset.i]!=null)el.textContent=D[el.dataset.i]});
   const q=document.getElementById("q");q.placeholder=D.search;q.setAttribute("aria-label",D.search);
-  document.getElementById("seg").setAttribute("aria-label",D.view);
   document.getElementById("c-x").setAttribute("aria-label",D.close);
-  keys.forEach(k=>{GENRES[k].subEl.textContent=D.sub[k]});
-  mWrap.querySelectorAll(".chip").forEach(b=>{b.title=D.mood[b.dataset.m]||b.dataset.m});
+  mWrap.querySelectorAll(".chip").forEach(b=>{b.title=D.mood[b.dataset.m]||""});
   songs.forEach(s=>s.el.setAttribute("aria-label",s.t+" — "+s.a+" ("+D.openIn+")"));
-  if(selected)document.getElementById("c-m").textContent=meta(selected);
   document.querySelectorAll("#lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.l===l));
+  if(CH)renderCharts();renderLive();
   try{localStorage.setItem("dtd-lang",l)}catch(e){}}
 document.querySelectorAll("#lang button").forEach(b=>b.addEventListener("click",()=>applyLang(b.dataset.l)));
-applyLang(lang);
-
-place();
+applyLang(lang);route();
 const sc=document.getElementById("scroller");requestAnimationFrame(()=>{if(sc.scrollWidth>sc.clientWidth)sc.scrollLeft=(sc.scrollWidth-sc.clientWidth)/2;else document.getElementById("m-hint").hidden=true});
+loadCharts();setInterval(loadCharts,POLL);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadCharts()});
 </script>
-
-</body></html>
+</body>
+</html>
