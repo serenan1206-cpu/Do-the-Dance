@@ -244,6 +244,22 @@ footer a:hover{color:var(--fg)}
 .hs .t small{display:block;font-weight:400;color:var(--muted);font-size:12px}
 .hf-grid .star{margin-top:12px;font-size:11.5px;color:var(--muted)}
 @media (max-width:720px){.hf-grid{grid-template-columns:1fr;gap:10px}.hf-head .ball{width:44px;height:44px}}
+
+/* random playlist */
+.rp-btn{appearance:none;border:1px solid var(--fg);background:var(--fg);color:#000;font-family:var(--f-wide);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:10px 16px;border-radius:99px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.rp-btn::before{content:"";width:7px;height:7px;border-radius:50%;background:#1ed760;box-shadow:0 0 8px #1ed760}
+.rp-btn:hover{background:transparent;color:var(--fg)}
+.rp-wrap{display:flex;justify-content:center;margin-top:22px}
+.rp-modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);padding:16px}
+.rp-modal[hidden]{display:none}
+.rp-box{width:min(440px,100%);background:#07070d;border:1px solid var(--line);border-radius:6px;padding:24px;box-shadow:0 0 60px rgba(120,120,255,.15)}
+.rp-box h3{margin:0 0 12px;font-family:var(--f-wide);font-weight:400;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+.rp-box p{margin:0 0 10px;font-size:14px;line-height:1.7;color:var(--fg)}
+.rp-box .rp-sub{color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.rp-bar{height:3px;background:var(--line);border-radius:3px;overflow:hidden;margin:6px 0 4px}.rp-bar i{display:block;height:100%;width:0;background:#1ed760;transition:width .2s}
+.rp-act{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.rp-b{appearance:none;border:1px solid var(--line);background:none;color:var(--fg);font-family:var(--f-wide);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:11px 16px;border-radius:99px;cursor:pointer;text-decoration:none}
+.rp-b.pri{background:#1ed760;border-color:#1ed760;color:#000}
 </style>
 </head>
 <body>
@@ -283,6 +299,7 @@ footer a:hover{color:var(--fg)}
     <div class="group" id="genres"></div>
     <div class="group" id="moods"></div>
     <input class="search" id="q" type="search">
+    <button type="button" class="rp-btn" id="rp-atlas"></button>
   </div>
 
   <div class="map-scroll" id="scroller">
@@ -308,6 +325,7 @@ footer a:hover{color:var(--fg)}
       <span class="live" id="live"><i></i><span id="live-t"></span></span>
       <span id="period"></span>
     </div>
+    <div class="rp-wrap"><button type="button" class="rp-btn" id="rp-charts"></button></div>
   </header>
 
   <div class="orbit" id="orbit">
@@ -331,6 +349,7 @@ footer a:hover{color:var(--fg)}
     <h2>11 STYLES</h2>
     <p class="tag" data-i="hTag"></p>
     <p class="intro" data-i="hIntro" style="max-width:56ch;margin:28px auto 0;color:var(--muted);font-size:14px;text-wrap:pretty"></p>
+    <div class="rp-wrap"><button type="button" class="rp-btn" id="rp-history"></button></div>
   </header>
   <div class="h-scroll" id="h-scroll"><div class="h-inner">
     <div class="h-map" id="h-map"><svg id="h-svg" aria-hidden="true"></svg><div id="h-nodes"></div></div>
@@ -790,6 +809,91 @@ function renderHFocus(){const D=L(),g=HG.find(x=>x.id===hSel),f=document.getElem
    '<div class="hf-grid"><section><h4>'+esc(D.hO)+'</h4><p>'+esc(g.o[lang]||g.o.en)+'</p><h4>'+esc(D.hD)+'</h4><p>'+esc(g.d[lang]||g.d.en)+'</p><h4>'+esc(D.hM)+'</h4><p class="mus">'+esc(g.m)+'</p></section>'+
    '<section><h4>'+esc(D.hS)+'</h4><ol class="hs">'+rows+'</ol><p class="star">'+esc(D.hStar)+'</p></section></div>'}
 
+
+const RP_SITE="Do the Dance";
+/* =================== RANDOM SPOTIFY PLAYLIST =================== */
+/* Spotify Web API, Authorization Code + PKCE (no secret in the page). Set SP_CLIENT_ID to the Client ID of the
+   Spotify app whose Redirect URIs include this page's URL (origin + path, no hash). */
+const SP_CLIENT_ID="__CLIENT_ID__";
+const SP_REDIRECT=location.origin+location.pathname.replace(/index\.html$/,"");
+const SP_SCOPES="playlist-modify-private playlist-modify-public";
+const RP_N=30;
+const RPUI={
+ ko:{btn:"랜덤 플레이리스트 생성",title:"랜덤 플레이리스트",go:"Spotify로 이동해서 로그인하면, 이 탭의 곡 중 무작위 30곡으로 내 Spotify에 새 플레이리스트를 만들어요.",start:"Spotify로 이동",cancel:"닫기",
+  find:"곡을 Spotify에서 찾는 중…",make:"플레이리스트를 만드는 중…",done:"완성됐어요. Spotify에서 열게요.",open:"Spotify에서 열기",
+  noid:"아직 Spotify 앱이 연결되지 않았어요. 사이트 관리자가 Client ID를 설정하면 쓸 수 있어요.",fail:"플레이리스트를 만들지 못했어요",denied:"Spotify 로그인이 취소됐어요.",notallowed:"이 Spotify 계정은 아직 앱 사용자로 등록되지 않았어요. 관리자에게 등록을 요청해 주세요.",found:"곡 찾음"},
+ ja:{btn:"ランダムプレイリストを作成",title:"ランダムプレイリスト",go:"Spotifyに移動してログインすると、このタブの曲からランダムに30曲を選んで、あなたのSpotifyに新しいプレイリストを作ります。",start:"Spotifyへ移動",cancel:"閉じる",
+  find:"Spotifyで曲を探しています…",make:"プレイリストを作成しています…",done:"完成しました。Spotifyで開きます。",open:"Spotifyで開く",
+  noid:"Spotifyアプリがまだ接続されていません。サイト管理者がClient IDを設定すると使えます。",fail:"プレイリストを作成できませんでした",denied:"Spotifyへのログインがキャンセルされました。",notallowed:"このSpotifyアカウントはまだアプリの利用者として登録されていません。管理者に登録を依頼してください。",found:"曲が見つかりました"},
+ en:{btn:"Make a random playlist",title:"Random playlist",go:"Sign in to Spotify and we'll pick 30 random songs from this tab and save them as a new playlist in your Spotify.",start:"Continue to Spotify",cancel:"Close",
+  find:"Finding the songs on Spotify…",make:"Creating the playlist…",done:"Done — opening it in Spotify.",open:"Open in Spotify",
+  noid:"The Spotify app isn't connected yet. It works once the site owner sets the Client ID.",fail:"Couldn't create the playlist",denied:"Spotify sign-in was cancelled.",notallowed:"This Spotify account isn't registered as a user of the app yet. Ask the site owner to add it.",found:"songs found"},
+ zh:{btn:"生成随机歌单",title:"随机歌单",go:"登录Spotify后，将从本页歌曲中随机挑选30首，在你的Spotify里新建一个歌单。",start:"前往Spotify",cancel:"关闭",
+  find:"正在Spotify中查找歌曲…",make:"正在创建歌单…",done:"完成了，正在Spotify中打开。",open:"在Spotify中打开",
+  noid:"尚未连接Spotify应用。网站管理员设置Client ID后即可使用。",fail:"无法创建歌单",denied:"已取消Spotify登录。",notallowed:"该Spotify账号尚未登记为应用用户，请联系管理员添加。",found:"首歌曲已找到"}
+};
+Object.keys(RPUI).forEach(k=>Object.assign(I18N[k],{rp:RPUI[k]}));
+const RPT=()=>L().rp;
+function rpEsc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function rpModal(html,actions){let m=document.getElementById("rp-modal");if(!m){m=document.createElement("div");m.id="rp-modal";m.className="rp-modal";m.setAttribute("role","dialog");m.setAttribute("aria-modal","true");document.body.append(m)}
+  m.innerHTML='<div class="rp-box">'+html+'<div class="rp-act"></div></div>';const act=m.querySelector(".rp-act");
+  (actions||[]).forEach(([label,fn,primary])=>{const b=document.createElement(fn&&fn.href?"a":"button");b.className="rp-b"+(primary?" pri":"");b.textContent=label;if(fn&&fn.href){b.href=fn.href;b.target="_blank";b.rel="noopener"}else{b.type="button";b.onclick=fn||rpClose}act.append(b)});
+  m.hidden=false;const f=act.querySelector(".pri")||act.querySelector("button");f&&f.focus()}
+function rpClose(){const m=document.getElementById("rp-modal");if(m)m.hidden=true}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")rpClose()});
+function rpShuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function b64url(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+function rpRand(n){const a=new Uint8Array(n);crypto.getRandomValues(a);return b64url(a).slice(0,n)}
+function rpStore(k,v){try{v==null?sessionStorage.removeItem(k):sessionStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function rpLoad(k){try{return JSON.parse(sessionStorage.getItem(k)||"null")}catch(e){return null}}
+/* entry point: label = tab name for the playlist title, pool = [{t,a,id?}] */
+function rpOpen(label,pool){const T=RPT();
+  if(!SP_CLIENT_ID||SP_CLIENT_ID.startsWith("__")){rpModal('<h3>'+rpEsc(T.title)+'</h3><p>'+rpEsc(T.noid)+'</p>',[[T.cancel,null,true]]);return}
+  const uniq=[];const seen=new Set();pool.forEach(s=>{const k=(s.id||(s.t+"|"+s.a)).toLowerCase();if(!seen.has(k)){seen.add(k);uniq.push(s)}});
+  rpModal('<h3>'+rpEsc(T.title)+' · '+rpEsc(label)+'</h3><p>'+rpEsc(T.go)+'</p><p class="rp-sub">'+uniq.length+' songs</p>',[[T.cancel,null],[T.start,()=>rpAuth(label,uniq),true]])}
+async function rpAuth(label,pool){const tok=rpLoad("rp-token");const job={label,pool:rpShuffle(pool).slice(0,Math.min(pool.length,RP_N*2)).map(s=>({t:s.t,a:s.a,id:s.id||null})),lang,hash:location.hash};
+  rpStore("rp-job",job);
+  if(tok&&tok.exp>Date.now()+60000){rpRun(tok.access);return}
+  const verifier=rpRand(64),state=rpRand(16);rpStore("rp-pkce",{verifier,state});
+  const ch=b64url(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(verifier)));
+  const q=new URLSearchParams({client_id:SP_CLIENT_ID,response_type:"code",redirect_uri:SP_REDIRECT,scope:SP_SCOPES,code_challenge_method:"S256",code_challenge:ch,state});
+  location.href="https://accounts.spotify.com/authorize?"+q}
+async function rpReturn(){const p=new URLSearchParams(location.search);if(!p.has("code")&&!p.has("error"))return;
+  const pk=rpLoad("rp-pkce"),job=rpLoad("rp-job");history.replaceState(null,"",SP_REDIRECT+(job&&job.hash||""));
+  if(job&&job.lang&&I18N[job.lang]&&job.lang!==lang)applyLang(job.lang);
+  const T=RPT();if(job&&job.hash&&typeof route==="function")route();
+  if(p.has("error")||!pk||p.get("state")!==pk.state){rpModal('<h3>'+rpEsc(T.title)+'</h3><p>'+rpEsc(T.denied)+'</p>',[[T.cancel,null,true]]);return}
+  rpModal('<h3>'+rpEsc(T.title)+'</h3><p class="rp-st">'+rpEsc(T.find)+'</p>');
+  try{const r=await fetch("https://accounts.spotify.com/api/token",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
+      body:new URLSearchParams({client_id:SP_CLIENT_ID,grant_type:"authorization_code",code:p.get("code"),redirect_uri:SP_REDIRECT,code_verifier:pk.verifier})});
+    const j=await r.json();if(!r.ok)throw new Error(j.error_description||j.error||r.status);
+    rpStore("rp-token",{access:j.access_token,exp:Date.now()+j.expires_in*1000});rpStore("rp-pkce",null);rpRun(j.access_token)}
+  catch(e){rpModal('<h3>'+rpEsc(T.fail)+'</h3><p class="rp-sub">'+rpEsc(e.message)+'</p>',[[T.cancel,null,true]])}}
+async function rpApi(tok,path,opt){const r=await fetch("https://api.spotify.com/v1"+path,Object.assign({},opt,{headers:Object.assign({Authorization:"Bearer "+tok,"Content-Type":"application/json"},(opt||{}).headers)}));
+  if(r.status===429){await new Promise(x=>setTimeout(x,(+r.headers.get("Retry-After")||2)*1000));return rpApi(tok,path,opt)}
+  const txt=await r.text();let j=null;try{j=txt?JSON.parse(txt):null}catch(e){}
+  if(!r.ok){const err=new Error((j&&j.error&&j.error.message)||r.status);err.status=r.status;throw err}return j}
+const rpClean=t=>String(t).replace(/\s*[\(\[]\s*(feat|ft|with|prod|from)[^\)\]]*[\)\]]/gi,"").replace(/\s+-\s+.*$/,"").trim();
+async function rpFind(tok,s){if(s.id)return "spotify:track:"+s.id;const a=String(s.a).split(",")[0].trim(),t=rpClean(s.t);
+  for(const q of ['track:"'+t+'" artist:"'+a+'"',t+" "+a]){const j=await rpApi(tok,"/search?type=track&limit=1&q="+encodeURIComponent(q));const it=j&&j.tracks&&j.tracks.items&&j.tracks.items[0];if(it)return it.uri}return null}
+async function rpRun(tok){const job=rpLoad("rp-job"),T=RPT();if(!job)return;const st=()=>document.querySelector("#rp-modal .rp-st");
+  rpModal('<h3>'+rpEsc(T.title)+' · '+rpEsc(job.label)+'</h3><p class="rp-st">'+rpEsc(T.find)+'</p><div class="rp-bar"><i></i></div>');
+  const bar=()=>document.querySelector("#rp-modal .rp-bar i");
+  try{const uris=[];for(const s of job.pool){if(uris.length>=RP_N)break;let u=null;try{u=await rpFind(tok,s)}catch(e){if(e.status===401||e.status===403)throw e}
+      if(u&&!uris.includes(u))uris.push(u);if(bar())bar().style.width=(uris.length/RP_N*100)+"%";if(st())st().textContent=T.find+"  "+uris.length+"/"+RP_N}
+    if(st())st().textContent=T.make;
+    const d=new Date().toISOString().slice(0,10);
+    const pl=await rpApi(tok,"/me/playlists",{method:"POST",body:JSON.stringify({name:RP_SITE+" · "+job.label+" · Random "+uris.length+" ("+d+")",public:false,description:"Random "+uris.length+" from "+SP_REDIRECT})});
+    await rpApi(tok,"/playlists/"+pl.id+"/items",{method:"POST",body:JSON.stringify({uris})});
+    rpStore("rp-job",null);const url=pl.external_urls&&pl.external_urls.spotify||"https://open.spotify.com/playlist/"+pl.id;
+    rpModal('<h3>'+rpEsc(T.done)+'</h3><p class="rp-sub">'+rpEsc(pl.name)+'</p>',[[T.cancel,null],[T.open,{href:url},true]]);
+    setTimeout(()=>{location.href=url},1200)}
+  catch(e){if(e.status===401)rpStore("rp-token",null);rpModal('<h3>'+rpEsc(T.fail)+'</h3><p>'+rpEsc(e.status===403?T.notallowed:"")+'</p><p class="rp-sub">'+rpEsc(e.message)+'</p>',[[T.cancel,null,true]])}}
+
+document.getElementById("rp-atlas").addEventListener("click",()=>{const v=songs.filter(visible);rpOpen("Atlas",(v.length?v:songs).map(s=>({t:s.t,a:s.a})))});
+document.getElementById("rp-charts").addEventListener("click",()=>{if(!CH)return;rpOpen("Genre Charts",CH.charts.flatMap(c=>c.tracks.map(t=>({t:t.t,a:t.a,id:t.id}))))});
+document.getElementById("rp-history").addEventListener("click",()=>{rpOpen("Dance Lineage",HG.flatMap(g=>g.s.map(([t,a])=>({t,a}))))});
+
 /* =================== ROUTING + LANGUAGE =================== */
 function route(){const h=location.hash,v=h==="#charts"?"charts":h==="#history"?"history":"atlas";
   ["atlas","charts","history"].forEach(k=>{document.getElementById("v-"+k).hidden=v!==k;const t=document.getElementById("t-"+k);if(v===k)t.setAttribute("aria-current","page");else t.removeAttribute("aria-current")});
@@ -803,9 +907,10 @@ function applyLang(l){lang=l;const D=L();document.documentElement.lang=l;
   songs.forEach(s=>s.el.setAttribute("aria-label",s.t+" — "+s.a+" ("+D.openIn+")"));
   document.querySelectorAll("#lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.l===l));
   if(CH)renderCharts();renderLive();if(!document.getElementById("v-history").hidden)renderHistory();
+  document.querySelectorAll(".rp-btn").forEach(b=>b.textContent=D.rp.btn);
   try{localStorage.setItem("dtd-lang",l)}catch(e){}}
 document.querySelectorAll("#lang button").forEach(b=>b.addEventListener("click",()=>applyLang(b.dataset.l)));
-applyLang(lang);route();
+applyLang(lang);route();rpReturn();
 const sc=document.getElementById("scroller");requestAnimationFrame(()=>{if(sc.scrollWidth>sc.clientWidth)sc.scrollLeft=(sc.scrollWidth-sc.clientWidth)/2;else document.getElementById("m-hint").hidden=true});
 loadCharts();setInterval(loadCharts,POLL);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadCharts()});
