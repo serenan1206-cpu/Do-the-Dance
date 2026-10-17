@@ -39,6 +39,7 @@ nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:28px;pa
 .tabs a[aria-current="page"]{color:var(--fg);border-color:var(--fg)}
 .tabs a:hover{color:var(--fg)}
 .lang{margin-left:auto;display:flex;gap:12px}
+.dev{margin-left:auto;font-family:"IBM Plex Sans KR",var(--f-body);font-size:11px;letter-spacing:.06em;color:var(--muted);white-space:nowrap}
 .lang button{appearance:none;background:none;border:0;padding:6px 0;color:var(--muted);font-family:var(--f-wide);font-size:9.5px;letter-spacing:.16em;cursor:pointer}
 .lang button[aria-pressed="true"]{color:var(--fg)}
 
@@ -199,7 +200,7 @@ footer a:hover{color:var(--fg)}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (max-width:720px){
-  nav{gap:16px;flex-wrap:wrap}.logo{font-size:13px;letter-spacing:.24em}.tabs{gap:16px}
+  nav{gap:12px 16px;flex-wrap:wrap}.logo{order:0}.dev{order:1}.tabs{order:2;width:100%}.lang{order:3;margin-left:0}.logo{font-size:13px;letter-spacing:.24em}.tabs{gap:16px}
   .hero{padding-top:8vh}.search{width:100%}
   .pl .one,.pl .pn{display:none}.pl b{font-size:7.5px}
   .board{grid-template-columns:1fr 1fr}.mini{padding:12px 10px}.mini li{grid-template-columns:1.2em 1fr;}.mini li .mv{display:none}
@@ -272,7 +273,8 @@ footer a:hover{color:var(--fg)}
     <a href="#charts" id="t-charts" data-i="tabCharts">Genre Charts</a>
     <a href="#history" id="t-history" data-i="tabHist">Dance Lineage</a>
   </div>
-  <div class="lang" role="group" aria-label="Language" id="lang">
+  <span class="dev">개발자: 박인아</span>
+  <div class="lang" style="margin-left:0" role="group" aria-label="Language" id="lang">
     <button type="button" data-l="ko" aria-pressed="true">KO</button><button type="button" data-l="ja" aria-pressed="false">JA</button><button type="button" data-l="en" aria-pressed="false">EN</button><button type="button" data-l="zh" aria-pressed="false">ZH</button>
   </div>
 </nav>
